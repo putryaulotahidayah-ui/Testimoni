@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tarik Saldo | Netflix Invest</title>
+<style>
+:root {
+  --bg: #0d0d0d;
+  --card: #1c1c1c;
+  --red: #e50914;
+  --white: #fff;
+  --green: #28a745;
+  --yellow: #ffc107;
+  --gray: #555;
+  --light-gray: #777;
+  --dark-gray: #333;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Poppins", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--white);
+  padding: 15px;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+h1 {
+  color: var(--red);
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.card {
+  background: var(--card);
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.7);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.5s ease;
+}
+
+.card.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.saldo-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: rgba(229, 9, 20, 0.1);
+  border-radius: 10px;
+  border-left: 4px solid var(--red);
+}
+
+.saldo-amount {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--green);
+}
+
+.card label {
+  display: block;
+  margin: 15px 0 8px 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.card input, .card select {
+  width: 100%;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid var(--dark-gray);
+  background: #222;
+  color: #fff;
+  font-size: 16px;
+  transition: border 0.3s;
+}
+
+.card input:focus, .card select:focus {
+  outline: none;
+  border-color: var(--red);
+}
+
+.card button {
+  background: var(--red);
+  color: #fff;
+  padding: 16px;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  margin-top: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card button:hover:not(:disabled) {
+  background: #b20710;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(229, 9, 20, 0.4);
+}
+
+.card button:disabled {
+  background: var(--gray);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.card button.processing {
+  background: var(--gray);
+  cursor: not-allowed;
+}
+
+.card button.processing::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.note {
+  font-size: 13px;
+  color: #aaa;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.info-box {
+  background: rgba(229, 9, 20, 0.15);
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 15px;
+  font-size: 14px;
+  color: #fff;
+  border-left: 4px solid var(--red);
+}
+
+.info-box h4 {
+  margin: 0 0 10px 0;
+  font-size: 15px;
+  color: #e50914;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-box ul {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.info-box li {
+  margin-bottom: 6px;
+}
+
+.info-box b {
+  color: var(--yellow);
+}
+
+.withdrawal-summary {
+  background: rgba(40, 167, 69, 0.1);
+  border-radius: 8px;
+  padding: 15px;
+  margin-top: 15px;
+  border-left: 4px solid var(--green);
+}
+
+.withdrawal-summary h4 {
+  margin: 0 0 10px 0;
+  font-size: 15px;
+  color: var(--green);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.summary-total {
+  border-top: 1px solid var(--light-gray);
+  padding-top: 8px;
+  margin-top: 8px;
+  font-weight: bold;
+  color: var(--green);
+}
+
+#toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--green);
+  color: #fff;
+  padding: 14px 24px;
+  border-radius: 8px;
+  display: none;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.7);
+  z-index: 999;
+  font-weight: 500;
+  text-align: center;
+  max-width: 90%;
+}
+
+#loader {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 998;
+}
+
+#loader div {
+  border: 5px solid #fff;
+  border-top: 5px solid var(--red);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.transaction {
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--dark-gray);
+}
+
+.transaction-info {
+  flex: 1;
+}
+
+.transaction-amount {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.transaction-details {
+  font-size: 13px;
+  color: #aaa;
+  margin-top: 4px;
+}
+
+.transaction-status {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.pending {
+  border-left: 4px solid var(--yellow);
+}
+
+.pending .transaction-status {
+  background: rgba(255, 193, 7, 0.2);
+  color: var(--yellow);
+}
+
+.success {
+  border-left: 4px solid var(--green);
+}
+
+.success .transaction-status {
+  background: rgba(40, 167, 69, 0.2);
+  color: var(--green);
+}
+
+.failed {
+  border-left: 4px solid var(--red);
+}
+
+.failed .transaction-status {
+  background: rgba(229, 9, 20, 0.2);
+  color: var(--red);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 30px 20px;
+  color: var(--light-gray);
+}
+
+.empty-state p {
+  margin: 10px 0 0 0;
+  font-size: 14px;
+}
+
+.limit-badge {
+  background: rgba(229, 9, 20, 0.2);
+  color: var(--red);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
+  
+  .card {
+    padding: 15px;
+  }
+  
+  h1 {
+    font-size: 22px;
+  }
+  
+  .saldo-amount {
+    font-size: 22px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Tarik Saldo</h1>
+
+  <div class="card show">
+    <div class="saldo-card">
+      <span>Total Saldo:</span>
+      <span class="saldo-amount">Rp <span id="saldo">0</span></span>
+    </div>
+  </div>
+
+  <div class="card show">
+    <label for="nominal">Nominal Penarikan</label>
+    <input type="text" id="nominal" placeholder="Masukkan nominal (contoh: 50.000)">
+    
+    <div class="info-box">
+      <h4>📌 Panduan Penarikan</h4>
+      <ul>
+        <li>Minimal penarikan: <b>Rp 30.000</b></li>
+        <li>Biaya penarikan: <b>10%</b> dari nominal</li>
+        <li>Batas penarikan: <b>1x per hari</b></li>
+        <li>Penarikan dapat dilakukan <b>24 jam</b></li>
+        <li>Harus memiliki <b>minimal 1 produk aktif</b></li>
+      </ul>
+    </div>
+
+    <label for="bank">Pilih Bank</label>
+    <select id="bank">
+      <option value="">-- Pilih Bank --</option>
+    </select>
+    
+    <div class="withdrawal-summary" id="summary" style="display: none;">
+      <h4>💰 Ringkasan Penarikan</h4>
+      <div class="summary-item">
+        <span>Nominal Penarikan:</span>
+        <span id="summary-nominal">Rp 0</span>
+      </div>
+      <div class="summary-item">
+        <span>Biaya Admin (10%):</span>
+        <span id="summary-biaya">Rp 0</span>
+      </div>
+      <div class="summary-item summary-total">
+        <span>Total Diterima:</span>
+        <span id="summary-total">Rp 0</span>
+      </div>
+    </div>
+
+    <button id="btnTarik">Ajukan Penarikan</button>
+    <p class="note" id="note"></p>
+  </div>
+
+  <div class="card show">
+    <h3>Riwayat Penarikan</h3>
+    <div id="riwayat">
+      <div class="empty-state">
+        <p>Belum ada riwayat penarikan</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<div id="loader"><div></div></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, get, set, update } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+  authDomain: "lginvest-776cf.firebaseapp.com",
+  databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+  projectId: "lginvest-776cf",
+  storageBucket: "lginvest-776cf.appspot.com",
+  messagingSenderId: "831934282072",
+  appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d",
+  measurementId: "G-265YF9DYCF"
+};
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const nohp = localStorage.getItem("nohp")||"081234567890";
+const userRef = ref(db,"users/"+nohp);
+
+const btn = document.getElementById("btnTarik");
+const saldoEl = document.getElementById("saldo");
+const bankEl = document.getElementById("bank");
+const noteEl = document.getElementById("note");
+const nominalEl = document.getElementById("nominal");
+const riwayatEl = document.getElementById("riwayat");
+const toastEl = document.getElementById("toast");
+const loaderEl = document.getElementById("loader");
+const summaryEl = document.getElementById("summary");
+const summaryNominalEl = document.getElementById("summary-nominal");
+const summaryBiayaEl = document.getElementById("summary-biaya");
+const summaryTotalEl = document.getElementById("summary-total");
+
+// Variabel untuk mencegah double click
+let isProcessing = false;
+
+// Input format titik
+nominalEl.addEventListener("input", e=>{
+  let value = e.target.value.replace(/\D/g,'');
+  if(value) value=parseInt(value).toLocaleString('id-ID');
+  e.target.value=value;
+  updateSummary();
+});
+
+// Update ringkasan penarikan
+function updateSummary() {
+  const nominal = parseInt(nominalEl.value.replace(/\./g,'')) || 0;
+  
+  if (nominal >= 30000) {
+    const biaya = Math.floor(nominal * 0.1);
+    const total = nominal - biaya;
+    
+    summaryNominalEl.textContent = `Rp ${formatRupiah(nominal)}`;
+    summaryBiayaEl.textContent = `Rp ${formatRupiah(biaya)}`;
+    summaryTotalEl.textContent = `Rp ${formatRupiah(total)}`;
+    summaryEl.style.display = 'block';
+  } else {
+    summaryEl.style.display = 'none';
+  }
+}
+
+// Fungsi untuk mengecek produk aktif
+function hasActiveProduct(user) {
+  // Cek di field 'produk' terlebih dahulu
+  if (user.produk) {
+    if (Array.isArray(user.produk)) {
+      return user.produk.length > 0;
+    }
+    
+    if (typeof user.produk === 'object' && user.produk !== null) {
+      return Object.keys(user.produk).length > 0;
+    }
+  }
+  
+  // Jika di 'produk' tidak ada, cek di 'investments'
+  if (user.investments) {
+    if (Array.isArray(user.investments)) {
+      return user.investments.length > 0;
+    }
+    
+    if (typeof user.investments === 'object' && user.investments !== null) {
+      return Object.keys(user.investments).length > 0;
+    }
+  }
+  
+  return false;
+}
+
+async function loadUser(){
+  try {
+    const snap = await get(userRef);
+    if(!snap.exists()) {
+      showToast("Data user tidak ditemukan", "var(--yellow)");
+      return;
+    }
+    
+    const user = snap.val();
+
+    if(!user.bank) {
+      window.location.href="bank.html";
+      return;
+    }
+    
+    saldoEl.textContent = formatRupiah(user.saldo||0);
+
+    // Otomatis isi bank
+    bankEl.innerHTML="<option value=''>-- Pilih Bank --</option>";
+    Object.keys(user.bank).forEach(b=>{
+      const opt = document.createElement("option");
+      opt.value=b;
+      opt.textContent = `${b} - ${user.bank[b].noRek} (${user.bank[b].namaPemilik})`;
+      bankEl.appendChild(opt);
+    });
+
+    // Riwayat penarikan
+    riwayatEl.innerHTML="";
+    if(user.penarikan && user.penarikan.length>0){
+      user.penarikan.slice().reverse().forEach(r=>{
+        const div = document.createElement("div");
+        div.className="transaction "+r.status.toLowerCase();
+        
+        const transactionInfo = document.createElement("div");
+        transactionInfo.className = "transaction-info";
+        
+        const amountDiv = document.createElement("div");
+        amountDiv.className = "transaction-amount";
+        amountDiv.textContent = `Rp ${formatRupiah(r.nominal)}`;
+        
+        const detailsDiv = document.createElement("div");
+        detailsDiv.className = "transaction-details";
+        detailsDiv.textContent = `${r.tanggal} - ${r.bank}`;
+        
+        transactionInfo.appendChild(amountDiv);
+        transactionInfo.appendChild(detailsDiv);
+        
+        const statusDiv = document.createElement("div");
+        statusDiv.className = "transaction-status";
+        statusDiv.textContent = r.status;
+        
+        div.appendChild(transactionInfo);
+        div.appendChild(statusDiv);
+        
+        riwayatEl.appendChild(div);
+      });
+    } else {
+      riwayatEl.innerHTML = `
+        <div class="empty-state">
+          <p>Belum ada riwayat penarikan</p>
+        </div>
+      `;
+    }
+
+    updateButton(user);
+  } catch (error) {
+    console.error("Error loading user:", error);
+    showToast("Gagal memuat data user", "var(--red)");
+  }
+}
+
+function updateButton(user){
+  let disable = false;
+  let note = "";
+  
+  // Cek produk aktif
+  const hasProduct = hasActiveProduct(user);
+  if(!hasProduct){
+    disable = true;
+    note = "❌ Anda harus memiliki minimal 1 produk aktif";
+  }
+  
+  // Cek batas penarikan harian (hanya yang status bukan Failed)
+  const today = new Date().toISOString().slice(0,10);
+  const penarikanHariIni = (user.penarikan || []).filter(r => 
+    r.tanggal === today && r.status !== "Failed"
+  );
+  
+  if(penarikanHariIni.length > 0){
+    disable = true;
+    note = "⏳ Batas penarikan 1x per hari (sudah ada penarikan hari ini)";
+  }
+  
+  btn.disabled = disable;
+  noteEl.textContent = note;
+}
+
+function showToast(msg,color="var(--green)"){
+  toastEl.textContent=msg;
+  toastEl.style.background=color;
+  toastEl.style.display="block";
+  setTimeout(()=>{toastEl.style.display="none";},3000);
+}
+
+// Fungsi untuk mencegah double click
+function setProcessingState(processing) {
+  isProcessing = processing;
+  if (processing) {
+    btn.classList.add('processing');
+    btn.disabled = true;
+    btn.textContent = 'Memproses...';
+  } else {
+    btn.classList.remove('processing');
+    btn.textContent = 'Ajukan Penarikan';
+  }
+}
+
+btn.addEventListener("click", async ()=>{
+  // Cek jika sedang memproses
+  if (isProcessing) {
+    return;
+  }
+  
+  let nominal = parseInt(nominalEl.value.replace(/\./g,''));
+  const bank = bankEl.value;
+  
+  if(!nominal || nominal<30000){
+    showToast("Minimal penarikan 30.000","var(--yellow)");
+    return;
+  }
+  
+  if(!bank){
+    showToast("Pilih bank terlebih dahulu","var(--yellow)");
+    return;
+  }
+  
+  // Set state processing dan nonaktifkan tombol
+  setProcessingState(true);
+  loaderEl.style.display="flex";
+  
+  try {
+    const snap = await get(userRef);
+    const user = snap.val();
+    const saldo = user.saldo||0;
+    const biaya = Math.floor(nominal*0.1);
+    const total = nominal + biaya;
+    
+    if(total>saldo){
+      showToast("Saldo tidak cukup","var(--yellow)");
+      return;
+    }
+
+    // Validasi ulang sebelum penarikan
+    if(!hasActiveProduct(user)){
+      showToast("Anda harus memiliki minimal 1 produk aktif","var(--yellow)");
+      return;
+    }
+
+    // Validasi ulang batas penarikan harian
+    const today = new Date().toISOString().slice(0,10);
+    const penarikanHariIni = (user.penarikan || []).filter(r => 
+      r.tanggal === today && r.status !== "Failed"
+    );
+    
+    if(penarikanHariIni.length > 0){
+      showToast("Batas penarikan 1x per hari (sudah ada penarikan hari ini)","var(--yellow)");
+      return;
+    }
+
+    // Proses penarikan
+    await update(userRef,{saldo:saldo-total});
+    const newPenarikan = {
+      nominal, 
+      biaya, 
+      bank, 
+      tanggal:new Date().toISOString().slice(0,10), 
+      status:"Pending",
+      waktu: new Date().toISOString()
+    };
+    const arr = user.penarikan||[];
+    arr.push(newPenarikan);
+    await set(ref(db,"users/"+nohp+"/penarikan"),arr);
+    
+    showToast("Penarikan berhasil diajukan");
+    
+    // Reset form
+    nominalEl.value="";
+    summaryEl.style.display = "none";
+    
+  } catch(e) {
+    console.error("Error during withdrawal:", e);
+    showToast("Penarikan gagal","var(--red)");
+  } finally {
+    // Reset state processing dan aktifkan tombol kembali
+    setProcessingState(false);
+    loaderEl.style.display="none";
+    loadUser();
+  }
+});
+
+function formatRupiah(n){return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.')}
+
+// Inisialisasi
+document.querySelectorAll('.card').forEach((c,i)=>{setTimeout(()=>{c.classList.add('show');},i*150);});
+loadUser();
+</script>
+</body>
+</html>

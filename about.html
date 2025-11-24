@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tentang Kami | Netflix Invest</title>
+<style>
+:root {
+  --bg: #0a0a0a;
+  --card: linear-gradient(145deg, #151515, #1e1e1e);
+  --red: #e50914;
+  --gold: #d4af37;
+  --white: #ffffff;
+  --gray: #b0b0b0;
+  --dark-gray: #404040;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--white);
+  line-height: 1.7;
+  padding: 20px;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 50px;
+  padding: 40px 20px;
+  position: relative;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.header h1 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  background: linear-gradient(135deg, var(--white), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 1px;
+}
+
+.header p {
+  color: var(--gray);
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Cards Grid */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-bottom: 60px;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.card {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 35px 30px;
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  border: 1px solid #2a2a2a;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+  border-color: var(--gold);
+}
+
+.card-icon {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, var(--red), #b20710);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 25px;
+  font-size: 28px;
+  box-shadow: 0 8px 20px rgba(229, 9, 20, 0.3);
+}
+
+.card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: var(--white);
+  font-weight: 600;
+}
+
+.card p {
+  color: var(--gray);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 30px 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  background: var(--card);
+  max-width: 900px;
+  margin: 40px auto;
+  border-radius: 20px;
+  position: relative;
+  border: 1px solid #333;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
+  animation: slideUp 0.4s ease;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-header {
+  padding: 35px 40px 0;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 1px solid #2a2a2a;
+  padding-bottom: 25px;
+}
+
+.modal-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, var(--red), #b20710);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: 0 8px 20px rgba(229, 9, 20, 0.3);
+}
+
+.modal-title {
+  font-size: 1.8rem;
+  color: var(--white);
+  font-weight: 600;
+}
+
+.modal-body {
+  padding: 30px 40px 40px;
+}
+
+.modal-image {
+  width: 100%;
+  height: 300px;
+  background: linear-gradient(135deg, #1a1a1a, #252525);
+  border-radius: 12px;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray);
+  font-style: italic;
+  border: 1px solid #333;
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-image::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent, rgba(212, 175, 55, 0.05), transparent);
+}
+
+.modal-text {
+  color: var(--gray);
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 25px;
+}
+
+.features-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.features-list li {
+  padding: 12px 0;
+  color: var(--gray);
+  border-bottom: 1px solid #2a2a2a;
+  position: relative;
+  padding-left: 25px;
+}
+
+.features-list li:before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+  font-weight: bold;
+}
+
+.features-list li:last-child {
+  border-bottom: none;
+}
+
+.features-list li strong {
+  color: var(--white);
+}
+
+.close-btn {
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: var(--gray);
+  font-size: 1.8rem;
+  cursor: pointer;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.close-btn:hover {
+  background: var(--red);
+  color: var(--white);
+  transform: rotate(90deg);
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--gray);
+  border-top: 1px solid #2a2a2a;
+  margin-top: 40px;
+}
+
+.footer p {
+  font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header h1 {
+    font-size: 2.2rem;
+  }
+  
+  .cards-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .modal-content {
+    margin: 20px auto;
+  }
+  
+  .modal-header,
+  .modal-body {
+    padding: 25px;
+  }
+  
+  .modal-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+  
+  .modal-image {
+    height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 15px;
+  }
+  
+  .header {
+    padding: 30px 15px;
+    margin-bottom: 30px;
+  }
+  
+  .header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .card {
+    padding: 25px 20px;
+  }
+  
+  .modal-header,
+  .modal-body {
+    padding: 20px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Tentang Netflix Invest</h1>
+  <p>Platform Investasi Digital Premium dengan Pengalaman Kelas Dunia</p>
+</div>
+
+<div class="cards-grid">
+  <div class="card" onclick="openModal('modal1')">
+    <div class="card-icon">🏛️</div>
+    <h3>Sejarah Perusahaan</h3>
+    <p>Perjalanan eksklusif kami dalam membangun kerajaan investasi digital terpercaya</p>
+  </div>
+
+  <div class="card" onclick="openModal('modal2')">
+    <div class="card-icon">💎</div>
+    <h3>Bidang Operasi</h3>
+    <p>Layanan investasi premium dan sistem referral eksklusif untuk kalangan terpilih</p>
+  </div>
+
+  <div class="card" onclick="openModal('modal3')">
+    <div class="card-icon">🌐</div>
+    <h3>Jaringan & Cabang</h3>
+    <p>Jaringan operasi premium kami di lokasi-lokasi strategis terpilih</p>
+  </div>
+
+  <div class="card" onclick="openModal('modal4')">
+    <div class="card-icon">🎯</div>
+    <h3>Visi & Misi</h3>
+    <p>Filosofi dan komitmen kami dalam menciptakan masa depan investasi yang gemilang</p>
+  </div>
+</div>
+
+<!-- Modals -->
+<div class="modal" id="modal1">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeModal('modal1')">&times;</button>
+    <div class="modal-header">
+      <div class="modal-icon">🏛️</div>
+      <h2 class="modal-title">Sejarah Perusahaan</h2>
+    </div>
+    <div class="modal-body">
+      <div class="modal-image">Gambar Eksklusif: Timeline Perkembangan Perusahaan</div>
+      <p class="modal-text">
+        Netflix Invest didirikan pada tahun 2022 dengan visi menciptakan platform investasi digital premium yang mengedepankan keamanan, transparansi, dan keuntungan eksklusif. Dalam kurun waktu 3 tahun, kami telah membangun reputasi sebagai platform elite dengan member terpilih.
+      </p>
+      <ul class="features-list">
+        <li><strong>2022</strong> - Pendirian Netflix Invest dengan fokus pada investasi digital premium</li>
+        <li><strong>2023</strong> - Pencapaian 8.000 member eksklusif dengan portofolio terkustomisasi</li>
+        <li><strong>2024</strong> - Ekspansi ke 8 kota metropolitan dengan konsep lounge premium</li>
+        <li><strong>2025</strong> - Target ekspansi regional dengan standard layanan kelas dunia</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal2">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeModal('modal2')">&times;</button>
+    <div class="modal-header">
+      <div class="modal-icon">💎</div>
+      <h2 class="modal-title">Bidang Operasi</h2>
+    </div>
+    <div class="modal-body">
+      <div class="modal-image">Gambar Eksklusif: Diagram Layanan Premium</div>
+      <p class="modal-text">
+        Netflix Invest menghadirkan pengalaman investasi digital yang tak tertandingi dengan layanan terkurasi khusus untuk klien premium. Setiap portofolio dikelola dengan pendekatan personal dan teknologi mutakhir.
+      </p>
+      <ul class="features-list">
+        <li><strong>Wealth Management</strong> - Pengelolaan kekuatan dengan strategi diversifikasi premium</li>
+        <li><strong>Private Referral System</strong> - Sistem referral eksklusif dengan benefit berlapis</li>
+        <li><strong>Portfolio Customization</strong> - Penyusunan portofolio personal sesuai profil risiko</li>
+        <li><strong>Exclusive Market Insights</strong> - Akses ke analisis pasar dan opportunity terpilih</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal3">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeModal('modal3')">&times;</button>
+    <div class="modal-header">
+      <div class="modal-icon">🌐</div>
+      <h2 class="modal-title">Jaringan & Cabang</h2>
+    </div>
+    <div class="modal-body">
+      <div class="modal-image">Gambar Eksklusif: Peta Jaringan Global</div>
+      <p class="modal-text">
+        Netflix Invest telah membangun jaringan premium di lokasi-lokasi strategis terpilih. Setiap cabang didesain dengan konsep lounge eksklusif yang menyediakan pengalaman konsultasi investasi kelas atas.
+      </p>
+      <ul class="features-list">
+        <li><strong>Headquarters</strong> - Netflix Invest Tower, Jakarta Selatan</li>
+        <li><strong>Premium Lounges</strong> - Surabaya, Bandung, Medan, Makassar, Bali</li>
+        <li><strong>International Desks</strong> - Singapore, Hong Kong, Dubai</li>
+        <li><strong>Future Expansion</strong> - Tokyo, London, New York (2025-2026)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal4">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeModal('modal4')">&times;</button>
+    <div class="modal-header">
+      <div class="modal-icon">🎯</div>
+      <h2 class="modal-title">Visi & Misi</h2>
+    </div>
+    <div class="modal-body">
+      <div class="modal-image">Gambar Eksklusif: Filosofi Perusahaan</div>
+      <p class="modal-text">
+        Netflix Invest berkomitmen untuk menciptakan ekosistem investasi yang tak hanya menguntungkan, tetapi juga memberikan pengalaman eksklusif dan kepuasan tersendiri bagi setiap member terpilih kami.
+      </p>
+      <ul class="features-list">
+        <li><strong>Visi:</strong> Menjadi institusi investasi digital terkemuka di kawasan Asia Pasifik dengan standar layanan premium dan teknologi finansial mutakhir.</li>
+        <li><strong>Misi:</strong> Menyediakan platform investasi eksklusif yang menggabungkan keamanan maksimal, transparansi absolut, dan peluang keuntungan terkurasi untuk member terpilih.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>&copy; 2024 Netflix Invest. All Rights Reserved. Platform Investasi Digital Premium</p>
+</div>
+
+<script>
+function openModal(modalId) {
+  document.getElementById(modalId).style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(modalId) {
+  document.getElementById(modalId).style.display = 'none';
+  document.body.style.overflow = 'auto';
+}
+
+// Close modal when clicking outside content
+window.addEventListener('click', function(event) {
+  if (event.target.classList.contains('modal')) {
+    event.target.style.display = 'none';
+    document.body.style.overflow = 'auto';
+  }
+});
+
+// Close modal with ESC key
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+      modal.style.display = 'none';
+    });
+    document.body.style.overflow = 'auto';
+  }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Login | Orbit</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    :root {
+      --orbit-dark: #0a0a16;
+      --orbit-primary: #6366f1;
+      --orbit-primary-dark: #4f46e5;
+      --orbit-secondary: #8b5cf6;
+      --orbit-white: #ffffff;
+      --orbit-gray: #94a3b8;
+      --orbit-light-gray: #e2e8f0;
+      --orbit-card-bg: rgba(15, 23, 42, 0.8);
+    }
+
+    body {
+      background-color: var(--orbit-dark);
+      color: var(--orbit-white);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Orbit Background Effect */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+        linear-gradient(to bottom, rgba(10, 10, 22, 0.9) 0%, rgba(15, 23, 42, 0.8) 100%);
+      z-index: -1;
+    }
+
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    .star {
+      position: absolute;
+      background-color: white;
+      border-radius: 50%;
+      animation: twinkle 5s infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+
+    .card {
+      background-color: var(--orbit-card-bg);
+      color: var(--orbit-white);
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      max-width: 450px;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--orbit-primary), var(--orbit-secondary));
+    }
+
+    .logo-container {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .orbit-logo {
+      font-size: 42px;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--orbit-primary), var(--orbit-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+    }
+
+    .card h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      font-size: 16px;
+      background-color: rgba(15, 23, 42, 0.6);
+      color: var(--orbit-white);
+      transition: all 0.3s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--orbit-primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(90deg, var(--orbit-primary), var(--orbit-secondary));
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--orbit-white);
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button:hover:enabled {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+    }
+
+    button:disabled {
+      background: #475569;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .loading-spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid transparent;
+      border-top: 2px solid var(--orbit-white);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    button:disabled .loading-spinner {
+      display: block;
+    }
+
+    button:disabled .button-text {
+      opacity: 0;
+    }
+
+    .register-link {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 16px;
+      color: var(--orbit-gray);
+    }
+
+    .register-link a {
+      color: var(--orbit-primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .register-link a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-text {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 12px;
+      color: var(--orbit-gray);
+    }
+
+    .notification {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: var(--orbit-card-bg);
+      color: var(--orbit-white);
+      padding: 25px 35px;
+      border-radius: 12px;
+      z-index: 1000;
+      display: none;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      border-left: 4px solid var(--orbit-primary);
+      max-width: 80%;
+      backdrop-filter: blur(10px);
+      animation: slideIn 0.5s ease-out;
+    }
+
+    .notification.success {
+      border-left-color: #10b981;
+    }
+
+    .notification.error {
+      border-left-color: #ef4444;
+    }
+
+    .notification-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .notification-icon {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+
+    .notification.success .notification-icon {
+      color: #10b981;
+    }
+
+    .notification.error .notification-icon {
+      color: #ef4444;
+    }
+
+    .notification-message {
+      font-size: 18px;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    .notification-progress {
+      width: 100%;
+      height: 4px;
+      background-color: #334155;
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .notification-progress-bar {
+      height: 100%;
+      background-color: var(--orbit-primary);
+      width: 100%;
+      animation: progressBar 2s linear;
+    }
+
+    .notification.success .notification-progress-bar {
+      background-color: #10b981;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 999;
+      display: none;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes progressBar {
+      from { width: 100%; }
+      to { width: 0%; }
+    }
+
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 25px;
+      }
+      
+      .card h2 {
+        font-size: 24px;
+      }
+      
+      input {
+        padding: 12px;
+      }
+      
+      .notification {
+        padding: 20px 25px;
+      }
+      
+      .notification-message {
+        font-size: 16px;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+  <div class="stars" id="stars"></div>
+
+  <div class="card">
+    <div class="logo-container">
+      <div class="orbit-logo">ORBIT</div>
+    </div>
+    <h2>Masuk ke Orbit</h2>
+    
+    <form onsubmit="login(event)">
+      <div class="input-group">
+        <input type="tel" id="nohp" placeholder="Nomor ponsel" required />
+      </div>
+      <div class="input-group">
+        <input type="password" id="password" placeholder="Kata sandi" required />
+      </div>
+      <button type="submit" id="loginBtn">
+        <span class="button-text">Masuk</span>
+        <div class="loading-spinner"></div>
+      </button>
+    </form>
+    
+    <div class="register-link">
+      Belum memiliki akun? <a href="register.html">Bergabung di sini</a>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay"></div>
+  <div class="notification" id="notification">
+    <div class="notification-content">
+      <div class="notification-icon" id="notificationIcon">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <div class="notification-message" id="notificationMessage"></div>
+      <div class="notification-progress">
+        <div class="notification-progress-bar" id="progressBar"></div>
+      </div>
+    </div>
+  </div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+  authDomain: "lginvest-776cf.firebaseapp.com",
+  databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+  projectId: "lginvest-776cf",
+  storageBucket: "lginvest-776cf.firebasestorage.app",
+  messagingSenderId: "831934282072",
+  appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d",
+  measurementId: "G-265YF9DYCF"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// Create stars background
+function createStars() {
+  const starsContainer = document.getElementById('stars');
+  const starsCount = 150;
+  
+  for (let i = 0; i < starsCount; i++) {
+    const star = document.createElement('div');
+    star.classList.add('star');
+    
+    const size = Math.random() * 2 + 1;
+    const left = Math.random() * 100;
+    const top = Math.random() * 100;
+    const delay = Math.random() * 5;
+    
+    star.style.width = `${size}px`;
+    star.style.height = `${size}px`;
+    star.style.left = `${left}%`;
+    star.style.top = `${top}%`;
+    star.style.animationDelay = `${delay}s`;
+    
+    starsContainer.appendChild(star);
+  }
+}
+
+// Notification functions
+function showNotification(msg, isError = false) {
+  const notification = document.getElementById('notification');
+  const overlay = document.getElementById('overlay');
+  const message = document.getElementById('notificationMessage');
+  const icon = document.getElementById('notificationIcon');
+  
+  message.textContent = msg;
+  
+  if (isError) {
+    notification.className = 'notification error';
+    icon.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
+  } else {
+    notification.className = 'notification success';
+    icon.innerHTML = '<i class="fas fa-check-circle"></i>';
+  }
+  
+  notification.style.display = 'block';
+  overlay.style.display = 'block';
+  
+  // Auto-hide after 2 seconds for success notifications
+  if (!isError) {
+    setTimeout(() => {
+      hideNotification();
+    }, 2000);
+  }
+}
+
+function hideNotification() {
+  document.getElementById('notification').style.display = 'none';
+  document.getElementById('overlay').style.display = 'none';
+}
+
+// Function to reset form
+function resetForm() {
+  document.getElementById("password").value = "";
+  document.getElementById("loginBtn").disabled = false;
+  document.getElementById("loginBtn").querySelector('.button-text').textContent = "Masuk";
+}
+
+window.login = async function(e){
+  e.preventDefault();
+  const btn = document.getElementById("loginBtn");
+  btn.disabled = true;
+  btn.querySelector('.button-text').textContent = "Memproses...";
+
+  const nohp = document.getElementById("nohp").value.trim();
+  const password = document.getElementById("password").value;
+
+  try {
+    const userRef = ref(db, "users/" + nohp);
+    const snapshot = await get(userRef);
+
+    if(snapshot.exists()){
+      const data = snapshot.val();
+      if(data.password === password){
+        localStorage.setItem("nohp", nohp);
+        showNotification("Login berhasil! Mengalihkan ke dashboard...");
+        // Redirect otomatis tanpa perlu klik OK
+        setTimeout(() => window.location.href = "dashboard.html", 2000);
+      } else {
+        showNotification("Kata sandi salah.", true);
+        // Reset form jika ada kesalahan
+        setTimeout(() => {
+          resetForm();
+        }, 1500);
+      }
+    } else {
+      showNotification("Akun tidak ditemukan.", true);
+      // Reset form jika ada kesalahan
+      setTimeout(() => {
+        resetForm();
+      }, 1500);
+    }
+  } catch(err){
+    showNotification("Gagal login: " + err.message, true);
+    // Reset form jika ada kesalahan
+    setTimeout(() => {
+      resetForm();
+    }, 1500);
+  }
+};
+
+// Auto reset form when error notification is closed
+document.getElementById('overlay').addEventListener('click', function() {
+  const notification = document.getElementById('notification');
+  if (notification.classList.contains('error')) {
+    resetForm();
+  }
+  hideNotification();
+});
+
+// Initialize stars when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  createStars();
+});
+</script>
+
+</body>
+</html>

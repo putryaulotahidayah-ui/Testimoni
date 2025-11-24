@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deposit | Netflix Invest</title>
+<style>
+:root{
+  --bg:#0d0d0d; --card:#1c1c1c; --red:#e50914; --white:#fff; --green:#28a745; --yellow:#ffc107; --gray:#555;
+}
+body{margin:0;font-family:"Poppins",Arial,sans-serif;background:var(--bg);color:var(--white);padding:15px;}
+h1{color:var(--red);text-align:center;margin-bottom:20px;}
+.card{background:var(--card);padding:15px;border-radius:12px;margin-bottom:15px;box-shadow:0 6px 20px rgba(0,0,0,0.7);opacity:0;transform: translateY(20px);transition: all 0.5s ease;}
+.card.show{opacity:1; transform:translateY(0);}
+.card label{display:block;margin:8px 0 4px 0;font-size:14px;}
+.card input, .card select{width:100%;padding:12px;border-radius:8px;border:none;background:#222;color:#fff;font-size:14px;}
+.card button{background:var(--red);color:#fff;padding:14px;width:100%;border:none;border-radius:8px;margin-top:12px;font-weight:600;cursor:pointer;transition:0.3s;}
+.card button:hover:not(:disabled){background:#b20710;}
+.card button:disabled{background:var(--gray);cursor:not-allowed;}
+.note{font-size:12px;color:#aaa;margin-top:5px;}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;padding:12px 20px;border-radius:8px;display:none;box-shadow:0 4px 16px rgba(0,0,0,0.7);z-index:999;}
+#loader{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;z-index:998;}
+#loader div{border:5px solid #fff;border-top:5px solid var(--red);border-radius:50%;width:50px;height:50px;animation:spin 1s linear infinite;}
+@keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+.transaction{padding:10px;margin-bottom:8px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.5);}
+.success{border-left:4px solid var(--green);}
+.panduan{background:rgba(229,9,20,0.15);padding:10px 12px;border-radius:10px;margin-top:10px;font-size:13px;color:#fff;}
+.panduan h4{margin:0 0 6px 0;font-size:14px;color:#e50914;}
+.panduan ul{padding-left:18px;margin:0;}
+.panduan li{margin-bottom:4px;}
+</style>
+</head>
+<body>
+
+<h1>Deposit Saldo</h1>
+
+<div class="card show">
+  <p>Total Saldo: Rp <span id="saldo">0</span></p>
+</div>
+
+<div class="card show">
+  <label for="nominal">Nominal Deposit</label>
+  <input type="text" id="nominal" placeholder="Masukkan nominal (misal 100.000)">
+
+  <div class="panduan">
+    <h4>📌 Panduan Deposit</h4>
+    <ul>
+      <li>Minimal deposit: <b>Rp 100.000</b></li>
+      <li>Pilih metode pembayaran yang tersedia</li>
+      <li>Saldo akan bertambah otomatis setelah deposit berhasil</li>
+    </ul>
+  </div>
+
+  <label for="metode">Metode Pembayaran</label>
+  <select id="metode">
+    <option value="">-- Pilih Metode --</option>
+    <option value="Dana">Dana</option>
+    <option value="OVO">OVO</option>
+    <option value="Gopay">Gopay</option>
+    <option value="ShopeePay">ShopeePay</option>
+    <option value="BRI">BRI</option>
+    <option value="BCA">BCA</option>
+    <option value="SeaBank">SeaBank</option>
+  </select>
+
+  <button id="btnDeposit">Ajukan Deposit</button>
+  <p class="note" id="note"></p>
+</div>
+
+<div class="card show">
+  <h3>Riwayat Deposit</h3>
+  <div id="riwayat"></div>
+</div>
+
+<div id="toast"></div>
+<div id="loader"><div></div></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, get, set, update } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+  authDomain: "lginvest-776cf.firebaseapp.com",
+  databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+  projectId: "lginvest-776cf",
+  storageBucket: "lginvest-776cf.appspot.com",
+  messagingSenderId: "831934282072",
+  appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d",
+  measurementId: "G-265YF9DYCF"
+};
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const nohp = localStorage.getItem("nohp")||"081234567890";
+const userRef = ref(db,"users/"+nohp);
+
+const btn = document.getElementById("btnDeposit");
+const saldoEl = document.getElementById("saldo");
+const metodeEl = document.getElementById("metode");
+const nominalEl = document.getElementById("nominal");
+const riwayatEl = document.getElementById("riwayat");
+const toastEl = document.getElementById("toast");
+const loaderEl = document.getElementById("loader");
+
+// Input nominal format titik
+nominalEl.addEventListener("input", e=>{
+  let value = e.target.value.replace(/\D/g,'');
+  if(value) value=parseInt(value).toLocaleString('id-ID');
+  e.target.value=value;
+});
+
+async function loadUser(){
+  const snap = await get(userRef);
+  if(!snap.exists()) return;
+  const user = snap.val();
+  saldoEl.textContent=formatRupiah(user.saldo||0);
+
+  // Riwayat deposit
+  riwayatEl.innerHTML="";
+  (user.deposit||[]).forEach(r=>{
+    const div=document.createElement("div");
+    div.className="transaction success";
+    div.textContent=`${r.tanggal} - Rp ${formatRupiah(r.nominal)} - ${r.metode} - Sukses`;
+    riwayatEl.appendChild(div);
+  });
+}
+
+function showToast(msg,color="var(--green)"){
+  toastEl.textContent=msg;
+  toastEl.style.background=color;
+  toastEl.style.display="block";
+  setTimeout(()=>{toastEl.style.display="none";},3000);
+}
+
+btn.addEventListener("click", async ()=>{
+  let nominal=parseInt(nominalEl.value.replace(/\./g,''));
+  const metode=metodeEl.value;
+  if(!nominal || nominal<100000){showToast("Minimal deposit 100.000","var(--yellow)"); return;}
+  if(!metode){showToast("Pilih metode pembayaran","var(--yellow)"); return;}
+  
+  loaderEl.style.display="flex";
+  try{
+    const snap = await get(userRef);
+    const user = snap.val();
+    const saldo = user.saldo||0;
+    await update(userRef,{saldo:saldo+nominal});
+    const arr=user.deposit||[];
+    arr.push({nominal,metode,tanggal:new Date().toISOString().slice(0,10)});
+    await set(ref(db,"users/"+nohp+"/deposit"),arr);
+showToast("Deposit berhasil ditambahkan");
+nominalEl.value="";
+metodeEl.value="";
+loadUser();
+  }catch(e){
+    showToast("Deposit gagal","var(--red)");
+  }finally{
+    loaderEl.style.display="none";
+  }
+});
+
+function formatRupiah(n){return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.')}
+document.querySelectorAll('.card').forEach((c,i)=>{setTimeout(()=>{c.classList.add('show');},i*150);});
+loadUser();
+</script>
+</body>
+</html>

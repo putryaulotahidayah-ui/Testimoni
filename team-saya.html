@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Team Saya | Orbit</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    :root {
+      --orbit-dark: #0a0a16;
+      --orbit-primary: #6366f1;
+      --orbit-primary-dark: #4f46e5;
+      --orbit-secondary: #8b5cf6;
+      --orbit-white: #ffffff;
+      --orbit-gray: #94a3b8;
+      --orbit-light-gray: #e2e8f0;
+      --orbit-card-bg: rgba(15, 23, 42, 0.8);
+      --orbit-green: #10b981;
+      --orbit-yellow: #f59e0b;
+      --orbit-purple: #8b5cf6;
+      --orbit-red: #ef4444;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background-color: var(--orbit-dark);
+      color: var(--orbit-white);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Orbit Background Effect */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+        linear-gradient(to bottom, rgba(10, 10, 22, 0.9) 0%, rgba(15, 23, 42, 0.8) 100%);
+      z-index: -1;
+    }
+
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    .star {
+      position: absolute;
+      background-color: white;
+      border-radius: 50%;
+      animation: twinkle 5s infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 15px 10px;
+      background-color: rgba(10, 10, 22, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .orbit-logo {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--orbit-primary), var(--orbit-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .orbit-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--orbit-primary), var(--orbit-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .orbit-avatar::before {
+      content: '';
+      position: absolute;
+      width: 60%;
+      height: 60%;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.7);
+    }
+
+    .orbit-avatar::after {
+      content: '';
+      position: absolute;
+      width: 30%;
+      height: 30%;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      top: 20%;
+      left: 20%;
+    }
+
+    /* Page Title */
+    .page-title {
+      text-align: center;
+      padding: 20px 15px;
+      background: rgba(10, 10, 22, 0.5);
+    }
+
+    .page-title h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      background: linear-gradient(90deg, var(--orbit-primary), var(--orbit-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .page-title p {
+      color: var(--orbit-gray);
+      font-size: 14px;
+    }
+
+    /* Scroll Container */
+    .scroll-container {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 80px;
+    }
+
+    /* Level Navigation */
+    .level-nav {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding: 15px;
+      background: var(--orbit-card-bg);
+      margin: 0 15px 20px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+    }
+
+    .level-tab {
+      text-align: center;
+      padding: 15px 8px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--orbit-gray);
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    .level-tab.active {
+      background: linear-gradient(135deg, var(--orbit-primary), var(--orbit-secondary));
+      color: var(--orbit-white);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+
+    .level-tab .level-name {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .level-tab .level-count {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    /* Team List */
+    .team-container {
+      padding: 0 15px 20px;
+    }
+
+    .level-content {
+      display: none;
+    }
+
+    .level-content.active {
+      display: block;
+    }
+
+    .team-section {
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--orbit-white);
+      padding: 15px 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .active-section .section-title {
+      color: var(--orbit-green);
+    }
+
+    .inactive-section .section-title {
+      color: var(--orbit-red);
+    }
+
+    .team-list {
+      background: var(--orbit-card-bg);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+    }
+
+    .team-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .team-item:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .team-item:last-child {
+      border-bottom: none;
+    }
+
+    .team-info {
+      flex: 1;
+    }
+
+    .team-info .phone {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--orbit-white);
+      margin-bottom: 4px;
+    }
+
+    .team-info .date {
+      font-size: 12px;
+      color: var(--orbit-gray);
+    }
+
+    .team-status {
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+    .status-active {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--orbit-green);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .status-inactive {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--orbit-red);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--orbit-gray);
+    }
+
+    .empty-state img {
+      width: 60px;
+      opacity: 0.5;
+      margin-bottom: 15px;
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(10, 10, 22, 0.95);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .bottom-nav a {
+      color: var(--orbit-gray);
+      text-decoration: none;
+      font-size: 12px;
+      text-align: center;
+      flex: 1;
+      transition: color 0.2s;
+      touch-action: manipulation;
+    }
+
+    .bottom-nav a.active {
+      color: var(--orbit-primary);
+    }
+
+    .bottom-nav img {
+      width: 22px;
+      display: block;
+      margin: 0 auto 5px;
+      filter: brightness(0) invert(1);
+      transition: filter 0.2s;
+    }
+
+    .bottom-nav a.active img {
+      filter: brightness(0) sepia(1) saturate(10000%) hue-rotate(230deg);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .level-nav {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      
+      .team-container {
+        padding: 0 12px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Stars Background -->
+  <div class="stars" id="stars"></div>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="orbit-logo">ORBIT</div>
+    <div class="user-info">
+      <div class="orbit-avatar" id="userAvatar"></div>
+    </div>
+  </div>
+
+  <!-- Page Title -->
+  <div class="page-title">
+    <h1>Team Saya</h1>
+    <p>Lihat semua member team Anda</p>
+  </div>
+
+  <!-- Level Navigation -->
+  <div class="level-nav">
+    <div class="level-tab active" data-level="1" onclick="showLevel(1)">
+      <div class="level-name">Level 1</div>
+      <div class="level-count" id="level1Count">0</div>
+    </div>
+    <div class="level-tab" data-level="2" onclick="showLevel(2)">
+      <div class="level-name">Level 2</div>
+      <div class="level-count" id="level2Count">0</div>
+    </div>
+    <div class="level-tab" data-level="3" onclick="showLevel(3)">
+      <div class="level-name">Level 3</div>
+      <div class="level-count" id="level3Count">0</div>
+    </div>
+  </div>
+
+  <!-- Scrollable Content -->
+  <div class="scroll-container">
+    <div class="team-container">
+      
+      <!-- Level 1 Content -->
+      <div class="level-content active" id="level1Content">
+        <div class="team-section active-section">
+          <div class="section-title">Aktif Berinvestasi</div>
+          <div class="team-list" id="level1ActiveList">
+            <!-- Team aktif level 1 akan diisi JavaScript -->
+          </div>
+        </div>
+        
+        <div class="team-section inactive-section">
+          <div class="section-title">Belum Investasi</div>
+          <div class="team-list" id="level1InactiveList">
+            <!-- Team tidak aktif level 1 akan diisi JavaScript -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Level 2 Content -->
+      <div class="level-content" id="level2Content">
+        <div class="team-section active-section">
+          <div class="section-title">Aktif Berinvestasi</div>
+          <div class="team-list" id="level2ActiveList">
+            <!-- Team aktif level 2 akan diisi JavaScript -->
+          </div>
+        </div>
+        
+        <div class="team-section inactive-section">
+          <div class="section-title">Belum Investasi</div>
+          <div class="team-list" id="level2InactiveList">
+            <!-- Team tidak aktif level 2 akan diisi JavaScript -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Level 3 Content -->
+      <div class="level-content" id="level3Content">
+        <div class="team-section active-section">
+          <div class="section-title">Aktif Berinvestasi</div>
+          <div class="team-list" id="level3ActiveList">
+            <!-- Team aktif level 3 akan diisi JavaScript -->
+          </div>
+        </div>
+        
+        <div class="team-section inactive-section">
+          <div class="section-title">Belum Investasi</div>
+          <div class="team-list" id="level3InactiveList">
+            <!-- Team tidak aktif level 3 akan diisi JavaScript -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <a href="dashboard.html">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/home.png"/>
+      Beranda
+    </a>
+    <a href="invest.html">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/investment.png"/>
+      Invest
+    </a>
+    <a href="team-saya.html" class="active">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/conference.png"/>
+      Team
+    </a>
+    <a href="user.html">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/user.png"/>
+      Profil
+    </a>
+  </div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, get, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyB_eFit5rt0-wOHMp30sw5rsOUzgU1jbQ8",
+  authDomain: "antamgrow.firebaseapp.com",
+  databaseURL: "https://antamgrow-default-rtdb.firebaseio.com",
+  projectId: "antamgrow",
+  storageBucket: "antamgrow.firebasestorage.app",
+  messagingSenderId: "890745577643",
+  appId: "1:890745577643:web:e47aefbd6f1db50fa497ee",
+  measurementId: "G-SPL0GLTXRJ"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+let userData = null;
+let currentLevel = 1;
+
+// Create stars background
+function createStars() {
+  const starsContainer = document.getElementById('stars');
+  const starsCount = 100;
+  
+  for (let i = 0; i < starsCount; i++) {
+    const star = document.createElement('div');
+    star.classList.add('star');
+    
+    const size = Math.random() * 2 + 1;
+    const left = Math.random() * 100;
+    const top = Math.random() * 100;
+    const delay = Math.random() * 5;
+    
+    star.style.width = `${size}px`;
+    star.style.height = `${size}px`;
+    star.style.left = `${left}%`;
+    star.style.top = `${top}%`;
+    star.style.animationDelay = `${delay}s`;
+    
+    starsContainer.appendChild(star);
+  }
+}
+
+// Fungsi untuk memuat data user
+function loadUserData() {
+  try {
+    const nohp = localStorage.getItem('nohp');
+    if (!nohp) {
+      showAlert('User tidak login');
+      return;
+    }
+
+    const userRef = ref(db, 'users/' + nohp);
+    
+    // Gunakan onValue untuk real-time updates
+    onValue(userRef, (snapshot) => {
+      if (snapshot.exists()) {
+        userData = snapshot.val();
+        updateLevelCounts();
+        loadAllTeamLists();
+      } else {
+        showAlert('User tidak ditemukan');
+      }
+    });
+    
+  } catch (error) {
+    console.error('Error loading user data:', error);
+    showAlert('Terjadi kesalahan saat memuat data');
+  }
+}
+
+// Update jumlah team per level
+function updateLevelCounts() {
+  if (!userData) return;
+
+  const level1Total = userData.totalRef1 || 0;
+  const level2Total = userData.totalRef2 || 0;
+  const level3Total = userData.totalRef3 || 0;
+
+  document.getElementById('level1Count').textContent = level1Total;
+  document.getElementById('level2Count').textContent = level2Total;
+  document.getElementById('level3Count').textContent = level3Total;
+}
+
+// Fungsi untuk menampilkan level yang dipilih
+function showLevel(level) {
+  currentLevel = level;
+  
+  // Update active tab
+  document.querySelectorAll('.level-tab').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  document.querySelector(`.level-tab[data-level="${level}"]`).classList.add('active');
+  
+  // Update active content
+  document.querySelectorAll('.level-content').forEach(content => {
+    content.classList.remove('active');
+  });
+  document.getElementById(`level${level}Content`).classList.add('active');
+}
+
+// Fungsi untuk memuat semua daftar team
+async function loadAllTeamLists() {
+  for (let level = 1; level <= 3; level++) {
+    await loadTeamList(level);
+  }
+}
+
+// Fungsi untuk memuat daftar team per level
+async function loadTeamList(level) {
+  const activeListElement = document.getElementById(`level${level}ActiveList`);
+  const inactiveListElement = document.getElementById(`level${level}InactiveList`);
+  
+  activeListElement.innerHTML = '<div class="empty-state">Memuat data aktif...</div>';
+  inactiveListElement.innerHTML = '<div class="empty-state">Memuat data tidak aktif...</div>';
+  
+  try {
+    // Ambil data dari refListLevelX
+    const refListKey = `refListLevel${level}`;
+    const referralList = userData[refListKey] || [];
+    
+    console.log(`Level ${level} - Total team ditemukan:`, referralList.length);
+    
+    if (referralList.length === 0) {
+      activeListElement.innerHTML = `
+        <div class="empty-state">
+          <img src="https://img.icons8.com/ios-filled/50/94a3b8/conference.png" alt="No team">
+          <div>Belum ada team aktif di level ${level}</div>
+        </div>
+      `;
+      inactiveListElement.innerHTML = `
+        <div class="empty-state">
+          <img src="https://img.icons8.com/ios-filled/50/94a3b8/conference.png" alt="No team">
+          <div>Belum ada team tidak aktif di level ${level}</div>
+        </div>
+      `;
+      return;
+    }
+    
+    let activeTeam = [];
+    let inactiveTeam = [];
+    let processedCount = 0;
+    
+    // Ambil detail untuk setiap team member
+    for (const nohp of referralList) {
+      try {
+        const userRef = ref(db, 'users/' + nohp);
+        const snap = await get(userRef);
+        
+        if (snap.exists()) {
+          const memberData = snap.val();
+          processedCount++;
+          
+          const joinDate = memberData.tanggal_daftar ? 
+            new Date(memberData.tanggal_daftar).toLocaleDateString('id-ID') : 
+            'Tanggal tidak diketahui';
+          
+          // Tentukan status
+          const sudahInvest = memberData.produkPertama || 
+                            (memberData.investments && Object.keys(memberData.investments).length > 0) ||
+                            memberData.firstPurchasePrice;
+          
+          // Sensor nomor telepon
+          const maskedPhone = nohp.length > 4 ? 
+                            nohp.substring(0, nohp.length - 4) + '****' : 
+                            nohp;
+          
+          const teamItem = `
+            <div class="team-item">
+              <div class="team-info">
+                <div class="phone">${maskedPhone}</div>
+                <div class="date">Bergabung: ${joinDate}</div>
+              </div>
+              <div class="team-status ${sudahInvest ? 'status-active' : 'status-inactive'}">
+                ${sudahInvest ? 'Aktif' : 'Tidak Aktif'}
+              </div>
+            </div>
+          `;
+          
+          if (sudahInvest) {
+            activeTeam.push(teamItem);
+          } else {
+            inactiveTeam.push(teamItem);
+          }
+        } else {
+          console.log(`User ${nohp} tidak ditemukan di database`);
+          // Tampilkan sebagai tidak aktif
+          const maskedPhone = nohp.length > 4 ? 
+                            nohp.substring(0, nohp.length - 4) + '****' : 
+                            nohp;
+          
+          inactiveTeam.push(`
+            <div class="team-item">
+              <div class="team-info">
+                <div class="phone">${maskedPhone}</div>
+                <div class="date">Status: Data tidak ditemukan</div>
+              </div>
+              <div class="team-status status-inactive">
+                Tidak Aktif
+              </div>
+            </div>
+          `);
+        }
+      } catch (error) {
+        console.error(`Error processing team member ${nohp}:`, error);
+        // Tampilkan sebagai tidak aktif
+        const maskedPhone = nohp.length > 4 ? 
+                          nohp.substring(0, nohp.length - 4) + '****' : 
+                          nohp;
+        
+        inactiveTeam.push(`
+          <div class="team-item">
+            <div class="team-info">
+              <div class="phone">${maskedPhone}</div>
+              <div class="date">Status: Error memuat data</div>
+            </div>
+            <div class="team-status status-inactive">
+              Tidak Aktif
+            </div>
+          </div>
+        `);
+      }
+    }
+    
+    console.log(`Level ${level} - Diproses: ${processedCount}, Aktif: ${activeTeam.length}, Tidak Aktif: ${inactiveTeam.length}`);
+    
+    // Update lists
+    if (activeTeam.length > 0) {
+      activeListElement.innerHTML = activeTeam.join('');
+    } else {
+      activeListElement.innerHTML = `
+        <div class="empty-state">
+          <img src="https://img.icons8.com/ios-filled/50/94a3b8/conference.png" alt="No active team">
+          <div>Belum ada team aktif di level ${level}</div>
+        </div>
+      `;
+    }
+    
+    if (inactiveTeam.length > 0) {
+      inactiveListElement.innerHTML = inactiveTeam.join('');
+    } else {
+      inactiveListElement.innerHTML = `
+        <div class="empty-state">
+          <img src="https://img.icons8.com/ios-filled/50/94a3b8/conference.png" alt="No inactive team">
+          <div>Belum ada team tidak aktif di level ${level}</div>
+        </div>
+      `;
+    }
+    
+  } catch (error) {
+    console.error(`Error loading team list level ${level}:`, error);
+    activeListElement.innerHTML = `
+      <div class="empty-state">
+        <div>Terjadi kesalahan saat memuat data aktif</div>
+      </div>
+    `;
+    inactiveListElement.innerHTML = `
+      <div class="empty-state">
+        <div>Terjadi kesalahan saat memuat data tidak aktif</div>
+      </div>
+    `;
+  }
+}
+
+// Fungsi utilitas
+function showAlert(msg) {
+  alert(msg);
+}
+
+// Inisialisasi saat halaman dimuat
+document.addEventListener('DOMContentLoaded', () => {
+  createStars();
+  loadUserData();
+});
+
+// Ekspor fungsi ke global scope
+window.showLevel = showLevel;
+</script>
+
+</body>
+</html>

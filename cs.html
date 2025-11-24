@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Panduan & Layanan CS | Netflix Invest</title>
+<style>
+:root{
+  --bg: #0d0d0d;
+  --card: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+  --red: #e50914;
+  --white: #fff;
+  --muted: #b3b3b3;
+  --gold: #ffd700;
+  --silver: #c0c0c0;
+  --dark-red: #b20710;
+}
+
+/* Reset untuk mencegah scroll horizontal */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  max-width: 100%;
+  width: 100%;
+  position: relative;
+}
+
+* {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+body{
+  margin:0;
+  font-family:"Poppins", Arial, sans-serif;
+  background:var(--bg);
+  color:var(--white);
+  padding:20px 20px 80px 20px;
+  line-height:1.6;
+  min-height:100vh;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Wrapper untuk konten */
+.content-wrapper {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Header Premium */
+.header{
+  text-align:center;
+  margin-bottom:30px;
+  position:relative;
+  width: 100%;
+}
+.header:after{
+  content:'';
+  position:absolute;
+  bottom:-10px;
+  left:50%;
+  transform:translateX(-50%);
+  width:100px;
+  height:3px;
+  background:linear-gradient(90deg, transparent, var(--red), transparent);
+}
+.header h1{
+  color:var(--white);
+  font-size:32px;
+  margin-bottom:8px;
+  font-weight:800;
+  background:linear-gradient(135deg, var(--red), var(--gold));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  text-shadow:0 2px 10px rgba(229,9,20,0.3);
+}
+.header p{
+  color:var(--muted);
+  font-size:16px;
+  margin:0;
+  letter-spacing:0.5px;
+}
+
+/* Banner Premium */
+.banner{
+  width:100%;
+  height:180px;
+  background:linear-gradient(135deg, var(--red), #8B0000);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:0 20px;
+  border-radius:20px;
+  box-shadow:0 10px 30px rgba(229,9,20,0.4);
+  margin-bottom:30px;
+  position:relative;
+  overflow:hidden;
+}
+.banner:before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(0,0,0,0.2)"/></svg>');
+  background-size:100% 100%;
+}
+.banner h1{
+  font-size:26px;
+  font-weight:800;
+  margin:0;
+  color:#fff;
+  text-shadow:0 2px 8px rgba(0,0,0,0.6);
+  position:relative;
+  z-index:2;
+  letter-spacing:1px;
+}
+
+/* Container dengan padding bottom untuk navigasi */
+.container{
+  margin-top:20px;
+  padding-bottom:30px;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Info text premium */
+.info{
+  font-size:15px;
+  color:#d1d1d1;
+  margin:20px 0 30px 0;
+  border-left:4px solid var(--red);
+  padding:18px 20px;
+  border-radius:12px;
+  background:linear-gradient(90deg, rgba(229,9,20,0.1), transparent);
+  line-height:1.6;
+  box-shadow:0 4px 15px rgba(0,0,0,0.3);
+  position:relative;
+  width: 100%;
+}
+.info:before{
+  content:'⚠️';
+  position:absolute;
+  left:-10px;
+  top:50%;
+  transform:translateY(-50%);
+  background:var(--red);
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  box-shadow:0 2px 8px rgba(229,9,20,0.5);
+}
+
+/* Card tombol premium */
+.card{
+  background:var(--card);
+  border-radius:18px;
+  padding:24px;
+  margin-bottom:20px;
+  display:flex;
+  align-items:center;
+  gap:20px;
+  cursor:pointer;
+  transition:all .4s ease;
+  box-shadow:0 6px 20px rgba(0,0,0,0.5);
+  border:1px solid rgba(255,255,255,0.08);
+  position:relative;
+  overflow:hidden;
+  width: 100%;
+}
+.card:before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:-100%;
+  width:100%;
+  height:100%;
+  background:linear-gradient(90deg, transparent, rgba(229,9,20,0.1), transparent);
+  transition:left 0.6s ease;
+}
+.card:hover{
+  box-shadow:0 10px 30px rgba(229,9,20,0.3);
+  transform:translateY(-5px);
+  border-color:rgba(229,9,20,0.3);
+}
+.card:hover:before{
+  left:100%;
+}
+.card:active{
+  transform:translateY(-2px);
+}
+.card img{
+  width:50px;
+  height:50px;
+  border-radius:12px;
+  padding:10px;
+  background:linear-gradient(135deg, rgba(229,9,20,0.15), rgba(255,215,0,0.1));
+  box-shadow:0 4px 12px rgba(0,0,0,0.3);
+  position:relative;
+  z-index:2;
+}
+.card-content{
+  flex:1;
+  position:relative;
+  z-index:2;
+  width: calc(100% - 70px);
+}
+.card-title{
+  font-size:19px;
+  font-weight:700;
+  color:#fff;
+  margin-bottom:8px;
+  letter-spacing:0.3px;
+}
+.card-desc{
+  font-size:14px;
+  color:var(--muted);
+  margin:0;
+  line-height:1.5;
+}
+
+/* Contact Hours Premium */
+.contact-hours{
+  background:linear-gradient(135deg, rgba(255,215,0,0.1), rgba(229,9,20,0.05));
+  border-radius:16px;
+  padding:20px;
+  margin:30px 0;
+  border:1px solid rgba(255,215,0,0.2);
+  position:relative;
+  overflow:hidden;
+  width: 100%;
+}
+.contact-hours:before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:4px;
+  background:linear-gradient(90deg, var(--gold), var(--red));
+}
+.contact-hours h3{
+  margin:0 0 12px 0;
+  font-size:17px;
+  color:var(--gold);
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.contact-hours p{
+  margin:0;
+  font-size:15px;
+  color:var(--muted);
+  font-weight:500;
+}
+
+/* FAQ Section Premium */
+.faq-section{
+  margin-top:40px;
+  width: 100%;
+}
+.faq-title{
+  font-size:22px;
+  font-weight:700;
+  color:var(--white);
+  margin-bottom:25px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  position:relative;
+  padding-bottom:12px;
+}
+.faq-title:before{
+  content:'❓';
+  font-size:20px;
+  background:linear-gradient(135deg, var(--red), var(--gold));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.faq-title:after{
+  content:'';
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:60px;
+  height:3px;
+  background:linear-gradient(90deg, var(--red), transparent);
+}
+.faq-item{
+  background:var(--card);
+  border-radius:16px;
+  padding:0;
+  margin-bottom:16px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.4);
+  border:1px solid rgba(255,255,255,0.05);
+  overflow:hidden;
+  transition:all 0.3s ease;
+  width: 100%;
+}
+.faq-item:hover{
+  border-color:rgba(229,9,20,0.2);
+}
+.faq-item.active{
+  box-shadow:0 8px 25px rgba(229,9,20,0.2);
+  border-color:rgba(229,9,20,0.3);
+}
+.faq-question{
+  font-size:16px;
+  font-weight:600;
+  color:var(--white);
+  padding:20px;
+  margin:0;
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  transition:background 0.3s ease;
+  position:relative;
+  width: 100%;
+}
+.faq-question:hover{
+  background:rgba(255,255,255,0.03);
+}
+.faq-question:after{
+  content:'▼';
+  font-size:12px;
+  color:var(--muted);
+  transition:all 0.3s ease;
+}
+.faq-item.active .faq-question:after{
+  transform:rotate(180deg);
+  color:var(--red);
+}
+.faq-answer{
+  font-size:15px;
+  color:var(--muted);
+  line-height:1.6;
+  padding:0 20px;
+  max-height:0;
+  overflow:hidden;
+  transition:all 0.4s ease;
+  width: 100%;
+}
+.faq-item.active .faq-answer{
+  padding:0 20px 20px 20px;
+  max-height:500px;
+}
+
+/* Bottom Navigation Premium */
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  background:rgba(20,20,20,0.95);
+  backdrop-filter:blur(15px);
+  display:flex;
+  justify-content:space-around;
+  padding:16px 0;
+  border-top:1px solid rgba(255,255,255,0.1);
+  z-index:100;
+  box-shadow:0 -5px 20px rgba(0,0,0,0.5);
+}
+.bottom-nav a{
+  color:#8c8c8c;
+  text-decoration:none;
+  font-size:12px;
+  text-align:center;
+  flex:1;
+  transition:all 0.3s ease;
+  position:relative;
+  padding:5px 0;
+}
+.bottom-nav a.active{
+  color:var(--red);
+}
+.bottom-nav a:after{
+  content:'';
+  position:absolute;
+  bottom:-16px;
+  left:50%;
+  width:0;
+  height:3px;
+  background:linear-gradient(90deg, var(--red), var(--gold));
+  transition:all 0.3s ease;
+  transform:translateX(-50%);
+}
+.bottom-nav a.active:after{
+  width:40px;
+}
+.bottom-nav img{
+  width:26px;
+  display:block;
+  margin:0 auto 6px;
+  filter:brightness(0) invert(1);
+  transition:all 0.3s ease;
+}
+.bottom-nav a.active img{
+  filter:brightness(0) saturate(100%) invert(18%) sepia(98%) saturate(5068%) hue-rotate(349deg) brightness(95%) contrast(98%);
+}
+
+/* Toast Notification Premium */
+.toast{
+  position:fixed;
+  bottom:90px;
+  left:50%;
+  transform:translateX(-50%);
+  background:linear-gradient(135deg, var(--red), var(--dark-red));
+  color:#fff;
+  padding:16px 24px;
+  border-radius:12px;
+  display:none;
+  box-shadow:0 6px 20px rgba(229,9,20,0.4);
+  z-index:999;
+  font-weight:500;
+  text-align:center;
+  max-width:85%;
+  border:1px solid rgba(255,255,255,0.1);
+  width: auto;
+  white-space: nowrap;
+}
+
+/* Premium Badge */
+.premium-badge{
+  position:absolute;
+  top:10px;
+  right:10px;
+  background:linear-gradient(135deg, var(--gold), #ff8c00);
+  color:#000;
+  padding:4px 10px;
+  border-radius:20px;
+  font-size:10px;
+  font-weight:800;
+  box-shadow:0 3px 10px rgba(255,215,0,0.4);
+  z-index:3;
+  letter-spacing:0.5px;
+}
+
+/* Media queries untuk memastikan responsif tanpa scroll horizontal */
+@media (max-width: 480px) {
+  body {
+    padding: 15px 15px 80px 15px;
+  }
+  
+  .header h1 {
+    font-size: 28px;
+  }
+  
+  .banner {
+    height: 160px;
+    padding: 0 15px;
+  }
+  
+  .banner h1 {
+    font-size: 22px;
+  }
+  
+  .card {
+    padding: 20px;
+    gap: 15px;
+  }
+  
+  .card img {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .card-title {
+    font-size: 17px;
+  }
+  
+  .faq-question {
+    padding: 18px;
+    font-size: 15px;
+  }
+  
+  .faq-answer {
+    padding: 0 18px;
+    font-size: 14px;
+  }
+  
+  .faq-item.active .faq-answer {
+    padding: 0 18px 18px 18px;
+  }
+}
+
+/* Prevents horizontal scroll on all devices */
+@media (max-width: 767px) {
+  html, body {
+    overflow-x: hidden;
+    position: relative;
+    width: 100%;
+  }
+}
+</style>
+</head>
+<body>
+<div class="content-wrapper">
+  <div class="header">
+    <h1>Netflix Invest</h1>
+    <p>Pusat Bantuan & Layanan Pelanggan Premium</p>
+  </div>
+
+  <div class="banner">
+    <h1>Panduan & Layanan CS</h1>
+  </div>
+
+  <div class="container">
+    <div class="info">
+      Admin tidak pernah menghubungi member secara langsung. Admin/Group resmi hanya di bawah ini. Hati-hati penipuan!
+    </div>
+
+    <div class="card" onclick="openTelegram('cs')">
+      <div class="premium-badge">PREMIUM</div>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram Logo">
+      <div class="card-content">
+        <div class="card-title">Layanan Customer Service</div>
+        <p class="card-desc">Hubungi CS premium kami untuk bantuan dan pertanyaan seputar investasi</p>
+      </div>
+    </div>
+
+    <div class="card" onclick="openTelegram('group')">
+      <div class="premium-badge">ELITE</div>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram Logo">
+      <div class="card-content">
+        <div class="card-title">Group Resmi Komunitas</div>
+        <p class="card-desc">Bergabung dengan komunitas elite investor Netflix Invest</p>
+      </div>
+    </div>
+
+    <div class="contact-hours">
+      <h3>🕒 Jam Layanan Premium</h3>
+      <p>Senin - Minggu: 10:00 - 20:00 WIB | Response Time: 5-15 menit</p>
+    </div>
+
+    <div class="faq-section">
+      <div class="faq-title">Pertanyaan Umum</div>
+      
+      <div class="faq-item">
+        <div class="faq-question">Bagaimana cara melakukan investasi?</div>
+        <div class="faq-answer">Pilih menu "Invest" di aplikasi, pilih paket yang diinginkan, konfirmasi pembelian, dan tunggu proses aktivasi. Setiap paket memiliki profit harian yang berbeda.</div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">Kapan profit harian bisa di-claim?</div>
+        <div class="faq-answer">Profit harian bisa di-claim setiap hari setelah 24jam, Profit akan bertambah otomatis setiap 24 jam dan dapat di-claim di menu "Produk Saya".</div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">Berapa lama proses penarikan saldo?</div>
+        <div class="faq-answer">Penarikan saldo diproses maksimal 1x24 jam pada hari kerja. Penarikan di hari libur akan diproses di hari kerja berikutnya. Minimal penarikan Rp 30.000.</div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">Apakah ada biaya penarikan?</div>
+        <div class="faq-answer">Ya, ada biaya admin sebesar 10% dari nominal penarikan. Biaya ini digunakan untuk operasional sistem dan proses transfer bank.</div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">Berapa lama masa aktif produk investasi?</div>
+        <div class="faq-answer">Masa aktif semua produk investasi adalah 95 hari. Setelah periode berakhir, Anda dapat memperpanjang atau membeli produk baru untuk melanjutkan passive income.</div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">Bagaimana cara mendapatkan bonus referral?</div>
+        <div class="faq-answer">Bagikan kode referral Anda ke teman. Anda akan mendapatkan komisi 20% dari pembelian pertama referral level 1, 2% dari level 2, dan 1% dari level 3. Komisi langsung masuk ke saldo.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<!-- Bottom Navigation Premium -->
+<div class="bottom-nav">
+  <a href="dashboard.html">
+    <img src="https://img.icons8.com/ios-filled/50/ffffff/home.png"/>
+    Beranda
+  </a>
+  <a href="invest.html">
+    <img src="https://img.icons8.com/ios-filled/50/ffffff/investment.png"/>
+    Invest
+  </a>
+  <a href="produk-saya.html">
+    <img src="https://img.icons8.com/ios-filled/50/ffffff/package.png"/>
+    Produk
+  </a>
+  <a href="cs.html" class="active">
+    <img src="https://img.icons8.com/ios-filled/50/ffffff/online-support.png"/>
+    Bantuan
+  </a>
+</div>
+
+<script>
+// Fungsi untuk membuka Telegram
+function openTelegram(type) {
+  let telegramUrl = '';
+  let message = '';
+  
+  if (type === 'cs') {
+    telegramUrl = 'https://t.me/+K47OuIYf5pliZTA1';
+    message = 'Membuka Customer Service Premium...';
+  } else if (type === 'group') {
+    telegramUrl = 'https://t.me/+K47OuIYf5pliZTA1';
+    message = 'Membuka Group Elite Komunitas...';
+  }
+  
+  showToast(message);
+  
+  // Buka Telegram di tab baru
+  setTimeout(() => {
+    window.open(telegramUrl, '_blank');
+  }, 500);
+}
+
+// Fungsi untuk menampilkan toast notifikasi
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.style.display = 'block';
+  
+  setTimeout(() => {
+    toast.style.display = 'none';
+  }, 3000);
+}
+
+// Fungsi untuk toggle FAQ
+document.addEventListener('DOMContentLoaded', function() {
+  const faqItems = document.querySelectorAll('.faq-item');
+  
+  faqItems.forEach(item => {
+    const question = item.querySelector('.faq-question');
+    
+    question.addEventListener('click', () => {
+      // Tutup semua FAQ items
+      faqItems.forEach(otherItem => {
+        if (otherItem !== item) {
+          otherItem.classList.remove('active');
+        }
+      });
+      
+      // Toggle item yang diklik
+      item.classList.toggle('active');
+    });
+  });
+  
+  // Auto buka FAQ pertama saat load
+  if (faqItems.length > 0) {
+    faqItems[0].classList.add('active');
+  }
+  
+  // Prevent horizontal scroll on touch devices
+  document.addEventListener('touchmove', function(e) {
+    if (e.touches.length === 1) {
+      const touch = e.touches[0];
+      if (touch.clientX <= 0 || touch.clientX >= window.innerWidth) {
+        e.preventDefault();
+      }
+    }
+  }, { passive: false });
+});
+
+// Prevent horizontal scroll with mouse wheel
+window.addEventListener('wheel', function(e) {
+  if (e.deltaX !== 0) {
+    e.preventDefault();
+  }
+}, { passive: false });
+</script>
+</body>
+</html>

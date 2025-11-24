@@ -1,0 +1,1107 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Investasi | Orbit</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    :root {
+      --orbit-dark: #0a0a16;
+      --orbit-primary: #6366f1;
+      --orbit-primary-dark: #4f46e5;
+      --orbit-secondary: #8b5cf6;
+      --orbit-white: #ffffff;
+      --orbit-gray: #94a3b8;
+      --orbit-light-gray: #e2e8f0;
+      --orbit-card-bg: rgba(15, 23, 42, 0.8);
+      --orbit-green: #10b981;
+      --orbit-yellow: #f59e0b;
+      --orbit-purple: #8b5cf6;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background-color: var(--orbit-dark);
+      color: var(--orbit-white);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Orbit Background Effect */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+        linear-gradient(to bottom, rgba(10, 10, 22, 0.9) 0%, rgba(15, 23, 42, 0.8) 100%);
+      z-index: -1;
+    }
+
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    .star {
+      position: absolute;
+      background-color: white;
+      border-radius: 50%;
+      animation: twinkle 5s infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 15px 10px;
+      background-color: rgba(10, 10, 22, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      flex-shrink: 0;
+    }
+
+    .orbit-logo {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--orbit-primary), var(--orbit-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .orbit-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--orbit-primary), var(--orbit-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .orbit-avatar::before {
+      content: '';
+      position: absolute;
+      width: 60%;
+      height: 60%;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.7);
+    }
+
+    .orbit-avatar::after {
+      content: '';
+      position: absolute;
+      width: 30%;
+      height: 30%;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      top: 20%;
+      left: 20%;
+    }
+
+    .page-title {
+      text-align: center;
+      padding: 20px 15px;
+      background: rgba(10, 10, 22, 0.5);
+      flex-shrink: 0;
+    }
+
+    .page-title h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      background: linear-gradient(90deg, var(--orbit-primary), var(--orbit-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .page-title p {
+      color: var(--orbit-gray);
+      font-size: 14px;
+    }
+
+    /* Scroll Container untuk produk - PERBAIKAN UTAMA */
+    .scroll-container {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 80px;
+      height: 100%;
+    }
+
+    .container{
+      padding: 20px 15px;
+      max-width: 1200px;
+      margin: 0 auto;
+      min-height: auto;
+    }
+
+    .grid{
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .product{
+      background: var(--orbit-card-bg);
+      border-radius: 16px;
+      padding: 20px 15px;
+      position: relative;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      transition: transform .25s ease, box-shadow .25s ease;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      touch-action: manipulation;
+    }
+
+    .product::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--orbit-primary), var(--orbit-secondary));
+    }
+
+    .product:hover, .product:active {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+    }
+
+    .product-image {
+      height: 80px;
+      width: 80px;
+      margin: 0 auto 15px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--orbit-primary), var(--orbit-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-image::before {
+      content: '🚀';
+      font-size: 35px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .product-image::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.2) 0%, transparent 70%);
+    }
+
+    .premium-badge {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: linear-gradient(135deg, var(--orbit-yellow), #f59e0b);
+      color: #000;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 800;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+      z-index: 2;
+    }
+
+    .title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--orbit-white);
+      text-align: center;
+    }
+
+    .price {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--orbit-white);
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .profit-container {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      border-left: 3px solid var(--orbit-green);
+    }
+
+    .profit-percent{
+      color: var(--orbit-green);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .profit-amount{
+      color: var(--orbit-white);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .duration {
+      font-size: 14px;
+      color: var(--orbit-gray);
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--orbit-primary), var(--orbit-secondary));
+      border: none;
+      color: var(--orbit-white);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+      transition: .2s;
+      margin-top: auto;
+      touch-action: manipulation;
+    }
+
+    .btn-primary:hover, .btn-primary:active {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(99, 102, 241, 0.5);
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(10, 10, 22, 0.95);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 100;
+      backdrop-filter: blur(10px);
+      flex-shrink: 0;
+    }
+
+    .bottom-nav a {
+      color: var(--orbit-gray);
+      text-decoration: none;
+      font-size: 12px;
+      text-align: center;
+      flex: 1;
+      transition: color 0.2s;
+      touch-action: manipulation;
+    }
+
+    .bottom-nav a.active {
+      color: var(--orbit-primary);
+    }
+
+    .bottom-nav img {
+      width: 22px;
+      display: block;
+      margin: 0 auto 5px;
+      filter: brightness(0) invert(1);
+      transition: filter 0.2s;
+    }
+
+    .bottom-nav a.active img {
+      filter: brightness(0) sepia(1) saturate(10000%) hue-rotate(230deg);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal {
+      background: var(--orbit-card-bg);
+      border-radius: 16px;
+      padding: 25px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      transform: translateY(30px) scale(0.95);
+      transition: transform 0.4s ease;
+      border: 1px solid rgba(255,255,255,0.05);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+    .modal::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--orbit-primary), var(--orbit-secondary));
+    }
+    .modal-overlay.active .modal {
+      transform: translateY(0) scale(1);
+    }
+    .modal h3 {
+      margin: 0 0 15px;
+      font-size: 20px;
+      color: var(--orbit-white);
+      text-align: center;
+    }
+    .modal p {
+      margin: 0 0 20px;
+      color: var(--orbit-gray);
+      line-height: 1.5;
+      text-align: center;
+      font-size: 14px;
+    }
+    .modal-product-info {
+      background: rgba(0,0,0,0.3);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    .modal-product-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .modal-product-row:last-child {
+      margin-bottom: 0;
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .modal-product-label {
+      color: var(--orbit-gray);
+      font-size: 13px;
+    }
+    .modal-product-value {
+      color: var(--orbit-white);
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .modal-buttons {
+      display: flex;
+      gap: 12px;
+    }
+    .modal-buttons button {
+      flex: 1;
+      padding: 12px 0;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s ease;
+      font-size: 14px;
+    }
+    .btn-cancel {
+      background: rgba(255,255,255,0.1);
+      color: var(--orbit-white);
+    }
+    .btn-cancel:hover, .btn-cancel:active {
+      background: rgba(255,255,255,0.2);
+      transform: translateY(-2px);
+    }
+    .btn-confirm {
+      background: linear-gradient(135deg, var(--orbit-primary), var(--orbit-secondary));
+      color: var(--orbit-white);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+    .btn-confirm:hover, .btn-confirm:active {
+      box-shadow: 0 6px 16px rgba(99, 102, 241, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .alert{
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--orbit-card-bg);
+      padding: 20px 25px;
+      border-radius: 16px;
+      display: none;
+      z-index: 999;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      text-align: center;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      backdrop-filter: blur(10px);
+      max-width: 80%;
+    }
+    .alert::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--orbit-primary), var(--orbit-secondary));
+    }
+    .alert p{
+      margin: 0 0 15px;
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--orbit-white);
+    }
+    .alert button{
+      background: linear-gradient(135deg, var(--orbit-primary), var(--orbit-secondary));
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      color: var(--orbit-white);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 14px;
+    }
+    .alert button:hover, .alert button:active {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      .container {
+        padding: 15px 12px;
+      }
+      .product {
+        min-height: 260px;
+      }
+      .modal-buttons {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Stars Background -->
+  <div class="stars" id="stars"></div>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="orbit-logo">ORBIT</div>
+    <div class="user-info">
+      <div class="orbit-avatar" id="userAvatar"></div>
+    </div>
+  </div>
+
+  <!-- Page Title -->
+  <div class="page-title">
+    <h1>Daftar Produk Orbit</h1>
+    <p>Pilih paket investasi terbaik untuk masa depan Anda</p>
+  </div>
+
+  <!-- Scrollable Content - STRUKTUR YANG DIPERBAIKI -->
+  <div class="scroll-container">
+    <div class="container">
+      <div class="grid" id="productGrid">
+        <!-- Produk akan di-generate oleh JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Konfirmasi -->
+  <div class="modal-overlay" id="confirmModal">
+    <div class="modal">
+      <h3>Konfirmasi Pembelian</h3>
+      <p id="confirmMessage">Anda akan membeli paket investasi berikut:</p>
+      <div class="modal-product-info" id="modalProductInfo">
+        <!-- Informasi produk akan dimuat di sini -->
+      </div>
+      <div class="modal-buttons">
+        <button class="btn-cancel" onclick="cancelPurchase()">Batalkan</button>
+        <button class="btn-confirm" onclick="confirmPurchase()">Lanjut Beli</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alert -->
+  <div class="alert" id="alertBox">
+    <p id="alertMsg"></p>
+    <button onclick="closeAlert()">OK</button>
+  </div>
+
+  <!-- Bottom nav -->
+  <div class="bottom-nav">
+    <a href="dashboard.html">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/home.png"/>
+      Beranda
+    </a>
+    <a href="invest.html" class="active">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/investment.png"/>
+      Invest
+    </a>
+    <a href="team.html">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/conference.png"/>
+      Tim
+    </a>
+    <a href="user.html">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/user.png"/>
+      Pengguna
+    </a>
+  </div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { 
+  getDatabase, 
+  ref, 
+  get, 
+  update, 
+  push, 
+  set,
+  onValue 
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+  authDomain: "lginvest-776cf.firebaseapp.com",
+  databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+  projectId: "lginvest-776cf",
+  storageBucket: "lginvest-776cf.firebasestorage.app",
+  messagingSenderId: "831934282072",
+  appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d",
+  measurementId: "G-265YF9DYCF"
+};
+
+// Inisialisasi Firebase
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// Create stars background
+function createStars() {
+  const starsContainer = document.getElementById('stars');
+  const starsCount = 100;
+  
+  for (let i = 0; i < starsCount; i++) {
+    const star = document.createElement('div');
+    star.classList.add('star');
+    
+    const size = Math.random() * 2 + 1;
+    const left = Math.random() * 100;
+    const top = Math.random() * 100;
+    const delay = Math.random() * 5;
+    
+    star.style.width = `${size}px`;
+    star.style.height = `${size}px`;
+    star.style.left = `${left}%`;
+    star.style.top = `${top}%`;
+    star.style.animationDelay = `${delay}s`;
+    
+    starsContainer.appendChild(star);
+  }
+}
+
+// Produk investasi
+const products = [
+  100000, 200000, 300000, 450000, 600000, 
+  750000, 950000, 1200000, 1600000, 2000000, 2500000, 3000000
+];
+
+// PERBAIKAN: Profit 25% sampai 36% - naik 1% per produk
+function getProfit(price){
+  if(price <= 100000) return Math.round(price * 0.25);        // 25%
+  if(price <= 200000) return Math.round(price * 0.26);        // 26%
+  if(price <= 300000) return Math.round(price * 0.27);        // 27%
+  if(price <= 450000) return Math.round(price * 0.28);        // 28%
+  if(price <= 600000) return Math.round(price * 0.29);        // 29%
+  if(price <= 750000) return Math.round(price * 0.30);        // 30%
+  if(price <= 950000) return Math.round(price * 0.31);        // 31%
+  if(price <= 1200000) return Math.round(price * 0.32);       // 32%
+  if(price <= 1600000) return Math.round(price * 0.33);       // 33%
+  if(price <= 2000000) return Math.round(price * 0.34);       // 34%
+  if(price <= 2500000) return Math.round(price * 0.35);       // 35%
+  if(price <= 3000000) return Math.round(price * 0.36);       // 36%
+  return Math.round(price * 0.36);                           // 36% untuk di atas 3jt
+}
+
+// PERBAIKAN: Profit percent 25% sampai 36% - naik 1% per produk
+function getProfitPercent(price){
+  if(price <= 100000) return "25%";
+  if(price <= 200000) return "26%";
+  if(price <= 300000) return "27%";
+  if(price <= 450000) return "28%";
+  if(price <= 600000) return "29%";
+  if(price <= 750000) return "30%";
+  if(price <= 950000) return "31%";
+  if(price <= 1200000) return "32%";
+  if(price <= 1600000) return "33%";
+  if(price <= 2000000) return "34%";
+  if(price <= 2500000) return "35%";
+  if(price <= 3000000) return "36%";
+  return "36%";
+}
+
+// Render produk
+function generateProductGrid() {
+  const grid = document.getElementById('productGrid');
+  grid.innerHTML = ''; // Clear existing content
+  
+  products.forEach((price, index) => {
+    const profit = getProfit(price);
+    const percent = getProfitPercent(price);
+    const div = document.createElement('div');
+    div.className = 'product';
+    
+    let badgeText = "BASIC";
+    if (price >= 1200000) badgeText = "PREMIUM";
+    if (price >= 2000000) badgeText = "ELITE";
+    
+    div.innerHTML = `
+      <div class="product-image"></div>
+      <div class="premium-badge">${badgeText}</div>
+      <div class="title">Paket Orbit ${index + 1}</div>
+      <div class="price">Rp ${formatRupiah(price)}</div>
+      <div class="profit-container">
+        <div class="profit-percent">${percent}</div>
+        <div class="profit-amount">Rp ${formatRupiah(profit)}/hari</div>
+      </div>
+      <div class="duration">Masa aktif: 35 hari</div>
+      <button class="btn-primary" onclick="openConfirmModal(${price}, this)">Beli Sekarang</button>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+// Variabel global untuk modal konfirmasi
+let pendingPrice = null;
+let pendingButton = null;
+
+// Modal Konfirmasi
+function openConfirmModal(price, button) {
+  pendingPrice = price;
+  pendingButton = button;
+  
+  const profit = getProfit(price);
+  const percent = getProfitPercent(price);
+  
+  const confirmMessage = document.getElementById('confirmMessage');
+  confirmMessage.textContent = `Anda akan membeli paket investasi berikut:`;
+  
+  const modalProductInfo = document.getElementById('modalProductInfo');
+  modalProductInfo.innerHTML = `
+    <div class="modal-product-row">
+      <span class="modal-product-label">Jenis Paket:</span>
+      <span class="modal-product-value">Orbit Basic</span>
+    </div>
+    <div class="modal-product-row">
+      <span class="modal-product-label">Harga:</span>
+      <span class="modal-product-value">Rp ${formatRupiah(price)}</span>
+    </div>
+    <div class="modal-product-row">
+      <span class="modal-product-label">Profit Harian:</span>
+      <span class="modal-product-value">${percent} (Rp ${formatRupiah(profit)})</span>
+    </div>
+    <div class="modal-product-row">
+      <span class="modal-product-label">Total Profit (35 hari):</span>
+      <span class="modal-product-value">Rp ${formatRupiah(profit * 35)}</span>
+    </div>
+    <div class="modal-product-row">
+      <span class="modal-product-label">Durasi:</span>
+      <span class="modal-product-value">35 hari</span>
+    </div>
+  `;
+  
+  const modal = document.getElementById('confirmModal');
+  modal.classList.add('active');
+}
+
+function cancelPurchase() {
+  const modal = document.getElementById('confirmModal');
+  modal.classList.remove('active');
+  pendingPrice = null;
+  pendingButton = null;
+}
+
+async function confirmPurchase() {
+  const modal = document.getElementById('confirmModal');
+  modal.classList.remove('active');
+  
+  if (pendingPrice && pendingButton) {
+    await beliProduk(pendingPrice, pendingButton);
+  }
+  
+  pendingPrice = null;
+  pendingButton = null;
+}
+
+// Alert
+function showAlert(msg, reload = false){
+  document.getElementById('alertMsg').textContent = msg; 
+  document.getElementById('alertBox').style.display = 'block';
+  
+  // Jika reload true, set callback untuk reload saat alert ditutup
+  if (reload) {
+    window.alertCallback = function() {
+      location.reload();
+    };
+  } else {
+    window.alertCallback = null;
+  }
+}
+
+window.closeAlert = function(){
+  document.getElementById('alertBox').style.display = 'none';
+  if (window.alertCallback) {
+    window.alertCallback();
+    window.alertCallback = null;
+  }
+}
+
+function formatRupiah(n){
+  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+}
+
+// Fungsi untuk update referral tree yang HANYA beri komisi pada pembelian pertama
+async function updateReferralTree(uplineNohp, harga, level = 1) {
+  if (level > 3 || !uplineNohp) {
+    console.log(`Berhenti di level ${level}, upline: ${uplineNohp}`);
+    return;
+  }
+  
+  try {
+    console.log(`Processing level ${level} for upline: ${uplineNohp}`);
+    
+    const uplineRef = ref(db, "users/" + uplineNohp);
+    const uplineSnap = await get(uplineRef);
+    
+    if (!uplineSnap.exists()) {
+      console.log(`Upline level ${level} tidak ditemukan: ${uplineNohp}`);
+      return;
+    }
+    
+    const uplineData = uplineSnap.val();
+    const nohpPembeli = localStorage.getItem("nohp");
+    
+    // Cek apakah pembeli sudah pernah memberikan komisi ke upline ini
+    const sudahKasihKomisiKey = "sudahKomisiDari_" + nohpPembeli;
+    if (uplineData[sudahKasihKomisiKey]) {
+      console.log(`Sudah memberikan komisi dari ${nohpPembeli} ke ${uplineNohp}, skip`);
+      // Tapi tetap lanjut ke level berikutnya untuk tracking
+      if (uplineData.upline) {
+        await updateReferralTree(uplineData.upline, harga, level + 1);
+      }
+      return;
+    }
+    
+    // Beri komisi hanya jika ini pembelian pertama dan belum pernah kasih komisi
+    const persen = level === 1 ? 20 : level === 2 ? 2 : 1;
+    const bonus = Math.round(harga * persen / 100);
+    
+    console.log(`Memberikan komisi ${persen}% = Rp ${formatRupiah(bonus)} ke ${uplineNohp} dari pembelian pertama ${nohpPembeli}`);
+    
+    // Update saldo dan total komisi upline
+    const updates = {
+      saldo: (uplineData.saldo || 0) + bonus,
+      totalKomisi: (uplineData.totalKomisi || 0) + bonus,
+      [sudahKasihKomisiKey]: true // Tandai sudah kasih komisi dari user ini
+    };
+    
+    await update(uplineRef, updates);
+    console.log('Komisi berhasil diberikan ke upline');
+    
+    // Update status referral aktif (hanya untuk tracking, bukan untuk komisi berulang)
+    const aktifListKey = "refListLevel" + level;
+    const totalAktifKey = "aktifRef" + level;
+    
+    const currentAktifList = uplineData[aktifListKey] || [];
+    
+    if (!currentAktifList.includes(nohpPembeli)) {
+      currentAktifList.push(nohpPembeli);
+      
+      await update(uplineRef, {
+        [aktifListKey]: currentAktifList,
+        [totalAktifKey]: (uplineData[totalAktifKey] || 0) + 1
+      });
+      
+      console.log(`Ditambahkan ke referral list level ${level} untuk ${uplineNohp}`);
+    }
+    
+    // Lanjut ke level berikutnya jika ada upline
+    if (uplineData.upline) {
+      await updateReferralTree(uplineData.upline, harga, level + 1);
+    } else {
+      console.log(`Tidak ada upline untuk level ${level}, berhenti.`);
+    }
+    
+  } catch (error) {
+    console.error("Error update referral tree:", error);
+  }
+}
+
+// Fungsi beli produk dengan komisi HANYA pada pembelian pertama
+window.beliProduk = async function(harga, btn) {
+  try {
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'Memproses...';
+    }
+    
+    const nohp = localStorage.getItem('nohp');
+    if (!nohp) {
+      showAlert('User tidak login. Silakan login kembali.');
+      return;
+    }
+    
+    console.log('Memproses pembelian untuk:', nohp);
+    
+    const userRef = ref(db, 'users/' + nohp);
+    const snap = await get(userRef);
+    
+    if (!snap.exists()) {
+      showAlert('User tidak ditemukan di database');
+      return;
+    }
+    
+    const user = snap.val();
+    let saldo = Number(user.saldo || 0);
+    
+    if (saldo < harga) {
+      showAlert('Saldo akun tidak mencukupi');
+      return;
+    }
+    
+    // Hitung profit yang benar
+    const profitPerDay = getProfit(harga);
+    const profitPercent = getProfitPercent(harga);
+    
+    saldo -= harga;
+    
+    // Buat ID investasi yang unik
+    const investmentId = 'investment_' + Date.now();
+    
+    // Data investasi
+    const investmentData = {
+      type: 'Orbit Basic',
+      price: harga,
+      profit: profitPerDay,
+      profitPercent: profitPercent,
+      start: new Date().toISOString(),
+      end: new Date(Date.now() + 35 * 24 * 60 * 60 * 1000).toISOString(),
+      duration_days: 35,
+      status: 'active',
+      purchasedAt: new Date().toISOString(),
+      claimed_profit: 0,
+      total_profit: 0,
+      last_claim_date: new Date().toISOString()
+    };
+    
+    // Gunakan transaction-like update untuk konsistensi data
+    const updates = {};
+    updates[`users/${nohp}/saldo`] = saldo;
+    updates[`users/${nohp}/totalInvest`] = (user.totalInvest || 0) + harga;
+    updates[`users/${nohp}/lastInvestment`] = new Date().toISOString();
+    updates[`users/${nohp}/investments/${investmentId}`] = investmentData;
+    
+    // Beri komisi ke upline HANYA jika ini benar-benar pembelian pertama user
+    const isFirstPurchase = !user.produkPertama && (!user.investments || Object.keys(user.investments).length === 0);
+    
+    if (isFirstPurchase) {
+      updates[`users/${nohp}/produkPertama`] = true;
+      updates[`users/${nohp}/firstPurchaseDate`] = new Date().toISOString();
+      updates[`users/${nohp}/firstPurchasePrice`] = harga;
+      
+      if (user.upline) {
+        console.log('Memproses komisi upline untuk pembelian pertama:', user.upline);
+        // Update referral tree terpisah - HANYA untuk pembelian pertama
+        await updateReferralTree(user.upline, harga, 1);
+      } else {
+        console.log('User tidak memiliki upline, skip komisi');
+      }
+    } else {
+      console.log('Ini bukan pembelian pertama, skip komisi');
+    }
+    
+    // Eksekusi semua update sekaligus
+    await update(ref(db), updates);
+    
+    console.log('Pembelian berhasil! Investment ID:', investmentId);
+    // Setelah pembelian berhasil, reload halaman
+    showAlert('Pembelian berhasil! Profit dapat di-claim di halaman Produk Saya.', true);
+    
+  } catch (e) {
+    console.error('Error pembelian:', e);
+    showAlert('Terjadi kesalahan saat pembelian: ' + e.message);
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = 'Beli Sekarang';
+    }
+  }
+}
+
+// Cek dan inisialisasi struktur data user
+async function checkUserStructure() {
+  const nohp = localStorage.getItem('nohp');
+  if (!nohp) return;
+  
+  try {
+    const userRef = ref(db, 'users/' + nohp);
+    const snap = await get(userRef);
+    
+    if (snap.exists()) {
+      const user = snap.val();
+      console.log('Struktur data user:', user);
+      
+      // Jika belum ada field required, buat field tersebut
+      const updates = {};
+      if (user.aktifRef1 === undefined) updates.aktifRef1 = 0;
+      if (user.aktifRef2 === undefined) updates.aktifRef2 = 0;
+      if (user.aktifRef3 === undefined) updates.aktifRef3 = 0;
+      if (user.refListLevel1 === undefined) updates.refListLevel1 = [];
+      if (user.refListLevel2 === undefined) updates.refListLevel2 = [];
+      if (user.refListLevel3 === undefined) updates.refListLevel3 = [];
+      if (user.totalKomisi === undefined) updates.totalKomisi = 0;
+      if (user.totalInvest === undefined) updates.totalInvest = 0;
+      if (user.produkPertama === undefined) updates.produkPertama = false;
+      if (user.investments === undefined) updates.investments = {};
+      
+      if (Object.keys(updates).length > 0) {
+        await update(userRef, updates);
+        console.log('Struktur data user diperbarui:', updates);
+      }
+    } else {
+      console.log('User tidak ditemukan di database');
+    }
+  } catch (error) {
+    console.error('Error cek struktur:', error);
+  }
+}
+
+// Fungsi untuk memantau perubahan data user secara real-time
+function monitorUserData() {
+  const nohp = localStorage.getItem('nohp');
+  if (!nohp) return;
+  
+  const userRef = ref(db, 'users/' + nohp);
+  onValue(userRef, (snapshot) => {
+    if (snapshot.exists()) {
+      const userData = snapshot.val();
+      console.log('Data user terupdate:', userData);
+    }
+  });
+}
+
+// Ekspor fungsi ke global scope
+window.openConfirmModal = openConfirmModal;
+window.cancelPurchase = cancelPurchase;
+window.confirmPurchase = confirmPurchase;
+
+// PERBAIKAN: Hapus event listener yang memblokir scroll
+// Comment out atau hapus kode yang memblokir scroll
+
+/*
+// Prevent zoom but allow vertical scroll - COMMENT OUT YANG INI
+document.addEventListener('touchmove', function(e) {
+  if (e.scale !== 1) { 
+    e.preventDefault(); 
+  }
+}, { passive: false });
+
+document.addEventListener('gesturestart', function(e) {
+  e.preventDefault();
+});
+
+document.addEventListener('dblclick', function(e) {
+  e.preventDefault();
+});
+
+// Prevent horizontal scroll - COMMENT OUT YANG INI
+window.addEventListener('scroll', function() {
+  if (window.scrollX !== 0) {
+    window.scrollTo(0, window.scrollY);
+  }
+});
+*/
+
+// Jalankan inisialisasi saat load
+document.addEventListener('DOMContentLoaded', () => {
+  createStars();
+  generateProductGrid();
+  checkUserStructure();
+  monitorUserData();
+  console.log('Halaman investasi Orbit siap - SCROLL FIXED');
+});
+
+</script>
+
+</body>
+</html>

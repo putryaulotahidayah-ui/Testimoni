@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Bonus Promosi | Netflix Invest</title>
+  <style>
+    :root{
+      --bg:#141414; --card:#1c1c1c; --muted:#9a9a9a;
+      --red:#e50914; --dark-red:#b20710; --white:#fff;
+      --green:#4CAF50; --gold:#FFD700; --purple:#8A2BE2;
+      --blue:#2196F3; --teal:#20c997; --orange:#FF9800;
+    }
+    body{
+      margin:0;
+      font-family:'Poppins', Arial, sans-serif;
+      background:var(--bg);
+      color:var(--white);
+      padding-bottom:80px;
+      overflow-x:hidden;
+    }
+
+    /* Header dengan animasi halus */
+    .app-header {
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      padding: 20px 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .app-header:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(0,0,0,0.3)"/></svg>');
+      background-size: 100% 100%;
+    }
+    .app-header-content {
+      position: relative;
+      z-index: 2;
+    }
+    .app-header h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+    .app-header p {
+      margin: 8px 0 0;
+      color: rgba(255,255,255,0.9);
+      font-size: 16px;
+    }
+
+    .container{
+      padding:24px 16px;
+      max-width:1000px;
+      margin:0 auto;
+    }
+
+    /* Info Box dengan animasi */
+    .info-box{
+      background: linear-gradient(145deg, #1c1c1c, #232323);
+      border-radius:16px;
+      padding:20px;
+      margin-bottom:24px;
+      box-shadow:0 8px 20px rgba(0,0,0,0.7);
+      border-left:6px solid var(--purple);
+      transition:all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .info-box:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--purple), var(--blue));
+    }
+    .info-box:hover{
+      transform:translateY(-5px);
+      box-shadow:0 15px 30px rgba(0,0,0,0.9);
+    }
+    .info-box h3{
+      font-size:18px;
+      margin:0 0 12px;
+      color:var(--gold);
+      display: flex;
+      align-items: center;
+    }
+    .info-box h3:before {
+      content: '💎';
+      margin-right: 8px;
+    }
+    .info-box p{
+      font-size:15px;
+      margin:0;
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    /* Bonus Cards */
+    .bonus-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .bonus-card {
+      background: linear-gradient(145deg, #1c1c1c, #232323);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255,255,255,0.05);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .bonus-card:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--purple), var(--blue));
+    }
+    .bonus-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.9);
+    }
+    .bonus-card.claimed {
+      border-color: var(--green);
+    }
+    .bonus-card.claimed:before {
+      background: var(--green);
+    }
+    .bonus-card.available {
+      border-color: var(--gold);
+    }
+    .bonus-card.available:before {
+      background: var(--gold);
+    }
+    .bonus-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .bonus-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .bonus-badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .badge-available {
+      background: rgba(255, 215, 0, 0.2);
+      color: var(--gold);
+    }
+    .badge-claimed {
+      background: rgba(76, 175, 80, 0.2);
+      color: var(--green);
+    }
+    .badge-locked {
+      background: rgba(158, 158, 158, 0.2);
+      color: var(--muted);
+    }
+    .bonus-amount {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--gold);
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .bonus-description {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 15px;
+      text-align: center;
+      flex-grow: 1;
+    }
+    .bonus-progress {
+      margin-bottom: 15px;
+    }
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+    .progress-bar {
+      height: 8px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--purple), var(--blue));
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+    .claim-btn {
+      background: linear-gradient(135deg, var(--purple), var(--blue));
+      border: none;
+      color: var(--white);
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3);
+    }
+    .claim-btn:hover {
+      box-shadow: 0 6px 16px rgba(138, 43, 226, 0.6);
+      transform: translateY(-2px);
+    }
+    .claim-btn:disabled {
+      background: rgba(158, 158, 158, 0.3);
+      color: var(--muted);
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    .claim-btn:disabled:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Stats Cards */
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:20px;
+      margin-bottom:24px;
+    }
+    .stat-card{
+      background: linear-gradient(145deg, #1c1c1c, #232323);
+      border-radius:16px;
+      padding:20px;
+      text-align:center;
+      box-shadow:0 8px 20px rgba(0,0,0,0.7);
+      transition:all 0.3s ease;
+      border: 1px solid rgba(255,255,255,0.05);
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--purple), var(--blue));
+    }
+    .stat-card:hover{
+      transform:translateY(-5px);
+      box-shadow:0 15px 30px rgba(0,0,0,0.9);
+    }
+    .stat-card .value{
+      font-size:28px;
+      font-weight:800;
+      margin-bottom:8px;
+      background: linear-gradient(90deg, var(--white), var(--muted));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .stat-card .label{
+      font-size:14px;
+      color:var(--muted);
+    }
+
+    /* Alert dengan animasi */
+    .alert{
+      position:fixed;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      background:#111;
+      padding:24px 28px;
+      border-radius:16px;
+      display:none;
+      z-index:999;
+      box-shadow:0 20px 40px rgba(0,0,0,0.9);
+      text-align:center;
+      border: 1px solid rgba(138, 43, 226, 0.3);
+      animation: alertAppear 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    @keyframes alertAppear {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+      100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+    .alert p{
+      margin:0 0 20px;
+      font-size: 17px;
+      line-height: 1.5;
+    }
+    .alert button{
+      background:var(--purple);
+      border:none;
+      padding:12px 22px;
+      border-radius:10px;
+      color:#fff;
+      font-weight:700;
+      cursor:pointer;
+      transition: all 0.3s ease;
+      font-size: 15px;
+    }
+    .alert button:hover {
+      background: var(--blue);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(138, 43, 226, 0.4);
+    }
+
+    /* Animasi untuk elemen yang dimuat */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .stat-card, .info-box, .bonus-card {
+      animation: fadeInUp 0.6s ease forwards;
+      opacity: 0;
+    }
+    .stat-card:nth-child(1) { animation-delay: 0.1s; }
+    .stat-card:nth-child(2) { animation-delay: 0.2s; }
+    .info-box { animation-delay: 0.3s; }
+    .bonus-card:nth-child(1) { animation-delay: 0.4s; }
+    .bonus-card:nth-child(2) { animation-delay: 0.5s; }
+    .bonus-card:nth-child(3) { animation-delay: 0.6s; }
+    .bonus-card:nth-child(4) { animation-delay: 0.7s; }
+    .bonus-card:nth-child(5) { animation-delay: 0.8s; }
+
+    /* Bottom nav dengan animasi */
+    .bottom-nav{
+      position:fixed;
+      bottom:0;
+      left:0;
+      width:100%;
+      background:rgba(17,17,17,0.95);
+      backdrop-filter: blur(10px);
+      display:flex;
+      justify-content:space-around;
+      padding:14px 0;
+      border-top:1px solid rgba(51,51,51,0.5);
+      z-index:99;
+    }
+    .bottom-nav a{
+      color:#8c8c8c;
+      text-decoration:none;
+      font-size:12px;
+      text-align:center;
+      flex:1;
+      transition: all 0.3s ease;
+      position: relative;
+      padding: 5px 0;
+    }
+    .bottom-nav a.active{
+      color:var(--purple);
+    }
+    .bottom-nav a:after {
+      content: '';
+      position: absolute;
+      bottom: -14px;
+      left: 50%;
+      width: 0;
+      height: 3px;
+      background: var(--purple);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+    .bottom-nav a.active:after {
+      width: 30px;
+    }
+    .bottom-nav img{
+      width:24px;
+      display:block;
+      margin:0 auto 5px;
+      filter:brightness(0) invert(1);
+      transition: all 0.3s ease;
+    }
+    .bottom-nav a.active img {
+      filter: brightness(0) saturate(100%) invert(32%) sepia(93%) saturate(1352%) hue-rotate(245deg) brightness(95%) contrast(85%);
+    }
+
+    /* Responsif untuk mobile */
+    @media (max-width: 768px) {
+      .stats, .bonus-cards {
+        grid-template-columns: 1fr;
+      }
+      .app-header h1 {
+        font-size: 24px;
+      }
+      .container {
+        padding: 20px 12px;
+      }
+      .bonus-card {
+        padding: 16px;
+      }
+      .bottom-nav a {
+        font-size: 11px;
+      }
+      .bottom-nav img {
+        width: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="app-header">
+    <div class="app-header-content">
+      <h1>Bonus Promosi</h1>
+      <p>Dapatkan bonus eksklusif dengan mengajak teman bergabung</p>
+    </div>
+  </div>
+
+  <!-- Container -->
+  <div class="container">
+    <!-- Stats Cards -->
+    <div class="stats">
+      <div class="stat-card">
+        <div class="value" id="totalRefInvested">0</div>
+        <div class="label">Referral Level 1 Berinvestasi</div>
+      </div>
+      <div class="stat-card">
+        <div class="value" id="totalBonusClaimed">Rp 0</div>
+        <div class="label">Total Bonus Diklaim</div>
+      </div>
+    </div>
+
+    <!-- Info Box -->
+    <div class="info-box">
+      <h3>💡 Cara Mendapatkan Bonus</h3>
+      <p><strong>Bonus hanya berlaku untuk referral Level 1 yang sudah berinvestasi!</strong> Setiap kali referral Level 1 Anda melakukan investasi pertama, mereka akan terhitung dalam program bonus ini. Semakin banyak referral Level 1 yang berinvestasi, semakin tinggi bonus yang bisa Anda klaim. Bonus akan langsung masuk ke saldo Anda setelah diklaim.</p>
+    </div>
+
+    <!-- Bonus Cards -->
+    <div class="bonus-cards">
+      <!-- Bonus 1 -->
+      <div class="bonus-card" id="bonus1">
+        <div class="bonus-header">
+          <div class="bonus-title">Bonus 5 Teman</div>
+          <div class="bonus-badge badge-locked" id="badge1">Terkunci</div>
+        </div>
+        <div class="bonus-amount">Rp 30.000</div>
+        <div class="bonus-description">Ajak 5 teman (Level 1) yang berinvestasi</div>
+        <div class="bonus-progress">
+          <div class="progress-text">
+            <span>Progress</span>
+            <span id="progressText1">0/5</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill1" style="width: 0%"></div>
+          </div>
+        </div>
+        <button class="claim-btn" id="claimBtn1" disabled>Klaim Bonus</button>
+      </div>
+
+      <!-- Bonus 2 -->
+      <div class="bonus-card" id="bonus2">
+        <div class="bonus-header">
+          <div class="bonus-title">Bonus 10 Teman</div>
+          <div class="bonus-badge badge-locked" id="badge2">Terkunci</div>
+        </div>
+        <div class="bonus-amount">Rp 70.000</div>
+        <div class="bonus-description">Ajak 10 teman (Level 1) yang berinvestasi</div>
+        <div class="bonus-progress">
+          <div class="progress-text">
+            <span>Progress</span>
+            <span id="progressText2">0/10</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill2" style="width: 0%"></div>
+          </div>
+        </div>
+        <button class="claim-btn" id="claimBtn2" disabled>Klaim Bonus</button>
+      </div>
+
+      <!-- Bonus 3 -->
+      <div class="bonus-card" id="bonus3">
+        <div class="bonus-header">
+          <div class="bonus-title">Bonus 25 Teman</div>
+          <div class="bonus-badge badge-locked" id="badge3">Terkunci</div>
+        </div>
+        <div class="bonus-amount">Rp 235.000</div>
+        <div class="bonus-description">Ajak 25 teman (Level 1) yang berinvestasi</div>
+        <div class="bonus-progress">
+          <div class="progress-text">
+            <span>Progress</span>
+            <span id="progressText3">0/25</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill3" style="width: 0%"></div>
+          </div>
+        </div>
+        <button class="claim-btn" id="claimBtn3" disabled>Klaim Bonus</button>
+      </div>
+
+      <!-- Bonus 4 -->
+      <div class="bonus-card" id="bonus4">
+        <div class="bonus-header">
+          <div class="bonus-title">Bonus 50 Teman</div>
+          <div class="bonus-badge badge-locked" id="badge4">Terkunci</div>
+        </div>
+        <div class="bonus-amount">Rp 400.000</div>
+        <div class="bonus-description">Ajak 50 teman (Level 1) yang berinvestasi</div>
+        <div class="bonus-progress">
+          <div class="progress-text">
+            <span>Progress</span>
+            <span id="progressText4">0/50</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill4" style="width: 0%"></div>
+          </div>
+        </div>
+        <button class="claim-btn" id="claimBtn4" disabled>Klaim Bonus</button>
+      </div>
+
+      <!-- Bonus 5 -->
+      <div class="bonus-card" id="bonus5">
+        <div class="bonus-header">
+          <div class="bonus-title">Bonus 100 Teman</div>
+          <div class="bonus-badge badge-locked" id="badge5">Terkunci</div>
+        </div>
+        <div class="bonus-amount">Rp 1.100.000</div>
+        <div class="bonus-description">Ajak 100 teman (Level 1) yang berinvestasi</div>
+        <div class="bonus-progress">
+          <div class="progress-text">
+            <span>Progress</span>
+            <span id="progressText5">0/100</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill5" style="width: 0%"></div>
+          </div>
+        </div>
+        <button class="claim-btn" id="claimBtn5" disabled>Klaim Bonus</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alert -->
+  <div class="alert" id="alertBox">
+    <p id="alertMsg"></p>
+    <button onclick="closeAlert()">OK</button>
+  </div>
+
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, get, update, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+  authDomain: "lginvest-776cf.firebaseapp.com",
+  databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+  projectId: "lginvest-776cf",
+  storageBucket: "lginvest-776cf.firebasestorage.app",
+  messagingSenderId: "831934282072",
+  appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d",
+  measurementId: "G-265YF9DYCF"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+let userData = null;
+
+// Bonus configuration
+const bonuses = [
+  { id: 1, requiredRefs: 5, bonusAmount: 30000 },
+  { id: 2, requiredRefs: 10, bonusAmount: 70000 },
+  { id: 3, requiredRefs: 25, bonusAmount: 235000 },
+  { id: 4, requiredRefs: 50, bonusAmount: 400000 },
+  { id: 5, requiredRefs: 100, bonusAmount: 1100000 }
+];
+
+// Fungsi untuk memuat data user
+function loadUserData() {
+  try {
+    const nohp = localStorage.getItem('nohp');
+    if (!nohp) {
+      showAlert('User tidak login');
+      return;
+    }
+
+    const userRef = ref(db, 'users/' + nohp);
+    
+    // Gunakan onValue untuk real-time updates
+    onValue(userRef, (snapshot) => {
+      if (snapshot.exists()) {
+        userData = snapshot.val();
+        updateUI();
+      } else {
+        showAlert('User tidak ditemukan');
+      }
+    });
+    
+  } catch (error) {
+    console.error('Error loading user data:', error);
+    showAlert('Terjadi kesalahan saat memuat data');
+  }
+}
+
+// Fungsi untuk memperbarui UI dengan data user
+function updateUI() {
+  if (!userData) return;
+
+  // Hitung jumlah referral level 1 yang sudah berinvestasi
+  const investedRefs = countInvestedRefs();
+  
+  // Update statistik
+  document.getElementById('totalRefInvested').textContent = investedRefs;
+  document.getElementById('totalBonusClaimed').textContent = 'Rp ' + formatRupiah(userData.totalBonusClaimed || 0);
+  
+  // Update setiap bonus card
+  bonuses.forEach(bonus => {
+    const bonusId = bonus.id;
+    const isClaimed = userData.claimedBonuses && userData.claimedBonuses[bonusId];
+    const progress = Math.min(investedRefs, bonus.requiredRefs);
+    const progressPercent = (progress / bonus.requiredRefs) * 100;
+    
+    // Update progress bar
+    document.getElementById(`progressText${bonusId}`).textContent = `${progress}/${bonus.requiredRefs}`;
+    document.getElementById(`progressFill${bonusId}`).style.width = `${progressPercent}%`;
+    
+    // Update badge dan status card
+    const badge = document.getElementById(`badge${bonusId}`);
+    const card = document.getElementById(`bonus${bonusId}`);
+    const claimBtn = document.getElementById(`claimBtn${bonusId}`);
+    
+    if (isClaimed) {
+      // Bonus sudah diklaim
+      badge.textContent = 'Terkumpul';
+      badge.className = 'bonus-badge badge-claimed';
+      card.classList.add('claimed');
+      claimBtn.disabled = true;
+      claimBtn.textContent = 'Sudah Diklaim';
+    } else if (investedRefs >= bonus.requiredRefs) {
+      // Bonus tersedia untuk diklaim
+      badge.textContent = 'Tersedia';
+      badge.className = 'bonus-badge badge-available';
+      card.classList.add('available');
+      claimBtn.disabled = false;
+      claimBtn.textContent = 'Klaim Bonus';
+    } else {
+      // Bonus belum tersedia
+      badge.textContent = 'Terkunci';
+      badge.className = 'bonus-badge badge-locked';
+      card.classList.remove('available', 'claimed');
+      claimBtn.disabled = true;
+      claimBtn.textContent = 'Klaim Bonus';
+    }
+  });
+}
+
+// Fungsi untuk menghitung jumlah referral level 1 yang sudah berinvestasi
+function countInvestedRefs() {
+  if (!userData.refListLevel1) return 0;
+  
+  let count = 0;
+  const refList = userData.refListLevel1;
+  
+  // Kita asumsikan setiap referral yang sudah investasi memiliki field 'firstPurchasePrice'
+  // Untuk implementasi nyata, kita perlu mengambil data setiap referral dari Firebase
+  // Untuk demo, kita gunakan nilai yang disimpan di userData
+  
+  // Di sini kita akan menggunakan field 'aktifRef1' sebagai jumlah referral level 1 yang aktif
+  // Untuk implementasi lengkap, kita perlu menghitung berapa banyak yang sudah investasi
+  // Untuk saat ini, kita asumsikan semua referral level 1 sudah berinvestasi
+  return userData.aktifRef1 || 0;
+}
+
+// Fungsi untuk mengklaim bonus
+async function claimBonus(bonusId) {
+  const nohp = localStorage.getItem('nohp');
+  if (!nohp || !userData) return;
+  
+  const bonus = bonuses.find(b => b.id === bonusId);
+  if (!bonus) return;
+  
+  // Cek apakah bonus sudah diklaim
+  if (userData.claimedBonuses && userData.claimedBonuses[bonusId]) {
+    showAlert('Bonus ini sudah diklaim sebelumnya');
+    return;
+  }
+  
+  // Cek apakah syarat terpenuhi
+  const investedRefs = countInvestedRefs();
+  if (investedRefs < bonus.requiredRefs) {
+    showAlert('Syarat belum terpenuhi untuk mengklaim bonus ini');
+    return;
+  }
+  
+  try {
+    const userRef = ref(db, 'users/' + nohp);
+    const updates = {};
+    
+    // Tandai bonus sebagai sudah diklaim
+    if (!userData.claimedBonuses) {
+      updates.claimedBonuses = {};
+    }
+    updates[`claimedBonuses/${bonusId}`] = true;
+    
+    // Tambahkan bonus ke saldo user
+    const currentBalance = userData.balance || 0;
+    updates.balance = currentBalance + bonus.bonusAmount;
+    
+    // Update total bonus yang sudah diklaim
+    const currentTotalBonus = userData.totalBonusClaimed || 0;
+    updates.totalBonusClaimed = currentTotalBonus + bonus.bonusAmount;
+    
+    // Update di Firebase
+    await update(userRef, updates);
+    
+    // Update data lokal
+    userData.balance = updates.balance;
+    userData.totalBonusClaimed = updates.totalBonusClaimed;
+    if (!userData.claimedBonuses) userData.claimedBonuses = {};
+    userData.claimedBonuses[bonusId] = true;
+    
+    // Update UI
+    updateUI();
+    
+    showAlert(`Selamat! Bonus Rp ${formatRupiah(bonus.bonusAmount)} berhasil diklaim dan sudah ditambahkan ke saldo Anda.`);
+    
+  } catch (error) {
+    console.error('Error claiming bonus:', error);
+    showAlert('Terjadi kesalahan saat mengklaim bonus');
+  }
+}
+
+// Fungsi utilitas
+function formatRupiah(n) {
+  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
+function showAlert(msg) {
+  document.getElementById('alertMsg').textContent = msg;
+  document.getElementById('alertBox').style.display = 'block';
+}
+
+function closeAlert() {
+  document.getElementById('alertBox').style.display = 'none';
+}
+
+// Inisialisasi saat halaman dimuat
+document.addEventListener('DOMContentLoaded', () => {
+  loadUserData();
+  
+  // Tambahkan event listener untuk tombol claim
+  bonuses.forEach(bonus => {
+    document.getElementById(`claimBtn${bonus.id}`).addEventListener('click', () => {
+      claimBonus(bonus.id);
+    });
+  });
+});
+
+// Ekspor fungsi ke global scope
+window.closeAlert = closeAlert;
+</script>
+
+</body>
+</html>

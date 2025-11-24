@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Daftar | Orbit</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    :root {
+      --orbit-dark: #0a0a16;
+      --orbit-primary: #6366f1;
+      --orbit-primary-dark: #4f46e5;
+      --orbit-secondary: #8b5cf6;
+      --orbit-white: #ffffff;
+      --orbit-gray: #94a3b8;
+      --orbit-light-gray: #e2e8f0;
+      --orbit-card-bg: rgba(15, 23, 42, 0.8);
+    }
+
+    body {
+      background-color: var(--orbit-dark);
+      color: var(--orbit-white);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Orbit Background Effect */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+        linear-gradient(to bottom, rgba(10, 10, 22, 0.9) 0%, rgba(15, 23, 42, 0.8) 100%);
+      z-index: -1;
+    }
+
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    .star {
+      position: absolute;
+      background-color: white;
+      border-radius: 50%;
+      animation: twinkle 5s infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+
+    .card {
+      background-color: var(--orbit-card-bg);
+      color: var(--orbit-white);
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      max-width: 450px;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--orbit-primary), var(--orbit-secondary));
+    }
+
+    .logo-container {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .orbit-logo {
+      font-size: 42px;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--orbit-primary), var(--orbit-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+    }
+
+    .card h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      font-size: 16px;
+      background-color: rgba(15, 23, 42, 0.6);
+      color: var(--orbit-white);
+      transition: all 0.3s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--orbit-primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(90deg, var(--orbit-primary), var(--orbit-secondary));
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--orbit-white);
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 20px;
+    }
+
+    button:hover:enabled {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+    }
+
+    button:disabled {
+      background: #475569;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .terms {
+      margin-top: 15px;
+      font-size: 13px;
+      color: var(--orbit-gray);
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .terms a {
+      color: var(--orbit-primary);
+      text-decoration: none;
+    }
+
+    .terms a:hover {
+      text-decoration: underline;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 16px;
+      color: var(--orbit-gray);
+    }
+
+    .login-link a {
+      color: var(--orbit-primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+
+    .notification {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: var(--orbit-card-bg);
+      color: var(--orbit-white);
+      padding: 25px 35px;
+      border-radius: 12px;
+      z-index: 1000;
+      display: none;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      border-left: 4px solid var(--orbit-primary);
+      max-width: 80%;
+      backdrop-filter: blur(10px);
+    }
+
+    .notification.error {
+      border-left-color: #ef4444;
+    }
+
+    .notification button {
+      background: var(--orbit-primary);
+      margin-top: 15px;
+      width: auto;
+      padding: 10px 25px;
+      border-radius: 6px;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 999;
+      display: none;
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 25px;
+      }
+      
+      .card h2 {
+        font-size: 24px;
+      }
+      
+      input {
+        padding: 12px;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="stars" id="stars"></div>
+
+  <div class="card">
+    <div class="logo-container">
+      <div class="orbit-logo">ORBIT</div>
+    </div>
+    <h2>Bergabung dengan Orbit</h2>
+    
+    <form onsubmit="register(event)">
+      <div class="input-group">
+        <input type="tel" id="nohp" placeholder="Nomor ponsel" minlength="11" maxlength="12" required />
+      </div>
+      <div class="input-group">
+        <input type="password" id="password" placeholder="Kata sandi" required />
+      </div>
+      <div class="input-group">
+        <input type="password" id="confirmPassword" placeholder="Ulangi kata sandi" required />
+      </div>
+      <div class="input-group">
+        <input type="text" id="referral" placeholder="Kode undangan (opsional)" />
+      </div>
+      
+      <button type="submit" id="btnDaftar" disabled>Mulai Perjalanan</button>
+      
+      <div class="terms">
+        Dengan mendaftar, Anda menyetujui <a href="#">Syarat dan Ketentuan</a> serta <a href="#">Kebijakan Privasi</a> kami.
+      </div>
+    </form>
+    
+    <div class="login-link">
+      Sudah memiliki akun? <a href="index.html">Masuk di sini</a>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay"></div>
+  <div class="notification" id="notification">
+    <div id="notificationMessage"></div>
+    <button onclick="hideNotification()">OK</button>
+  </div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+  authDomain: "lginvest-776cf.firebaseapp.com",
+  databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+  projectId: "lginvest-776cf",
+  storageBucket: "lginvest-776cf.firebasestorage.app",
+  messagingSenderId: "831934282072",
+  appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d",
+  measurementId: "G-265YF9DYCF"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// Create stars background
+function createStars() {
+  const starsContainer = document.getElementById('stars');
+  const starsCount = 150;
+  
+  for (let i = 0; i < starsCount; i++) {
+    const star = document.createElement('div');
+    star.classList.add('star');
+    
+    const size = Math.random() * 2 + 1;
+    const left = Math.random() * 100;
+    const top = Math.random() * 100;
+    const delay = Math.random() * 5;
+    
+    star.style.width = `${size}px`;
+    star.style.height = `${size}px`;
+    star.style.left = `${left}%`;
+    star.style.top = `${top}%`;
+    star.style.animationDelay = `${delay}s`;
+    
+    starsContainer.appendChild(star);
+  }
+}
+
+// Notification functions
+function showNotification(msg, isError = false) {
+  const notification = document.getElementById('notification');
+  const overlay = document.getElementById('overlay');
+  const message = document.getElementById('notificationMessage');
+  
+  message.textContent = msg;
+  notification.className = isError ? 'notification error' : 'notification';
+  notification.style.display = 'block';
+  overlay.style.display = 'block';
+}
+
+function hideNotification() {
+  document.getElementById('notification').style.display = 'none';
+  document.getElementById('overlay').style.display = 'none';
+}
+
+// Generate referral code
+function generateReferralCode() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+// Enable/disable register button based on phone number validation
+const nohpInput = document.getElementById("nohp");
+const btnDaftar = document.getElementById("btnDaftar");
+nohpInput.addEventListener("input", () => {
+  btnDaftar.disabled = !(/^\d{11,12}$/.test(nohpInput.value.trim()));
+});
+
+// Fungsi untuk update referral chain (level 2 dan 3)
+async function updateReferralChain(uplinePhone, newUserPhone, level = 1) {
+  if (level > 3) return; // Hanya sampai level 3
+  
+  try {
+    const uplineRef = ref(db, "users/" + uplinePhone);
+    const uplineSnap = await get(uplineRef);
+    
+    if (uplineSnap.exists()) {
+      const uplineData = uplineSnap.val();
+      
+      // Update referral lists berdasarkan level
+      const listKey = `refList${level}`;
+      const countKey = `totalRef${level}`;
+      const nonAktifKey = `nonAktifRef${level}`;
+      
+      const currentList = uplineData[listKey] || [];
+      if (!currentList.includes(newUserPhone)) {
+        currentList.push(newUserPhone);
+      }
+      
+      const updates = {
+        [listKey]: currentList,
+        [countKey]: (uplineData[countKey] || 0) + 1,
+        [nonAktifKey]: (uplineData[nonAktifKey] || 0) + 1
+      };
+      
+      await update(uplineRef, updates);
+      
+      // Lanjut ke level berikutnya jika upline memiliki upline
+      if (uplineData.upline && level < 3) {
+        await updateReferralChain(uplineData.upline, newUserPhone, level + 1);
+      }
+    }
+  } catch (error) {
+    console.error("Error updating referral chain:", error);
+  }
+}
+
+window.register = async function(e) {
+  e.preventDefault();
+  
+  const nohp = nohpInput.value.trim();
+  const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
+  const kodeRef = document.getElementById("referral").value.trim();
+  
+  // Validate password confirmation
+  if (password !== confirmPassword) {
+    showNotification("Kata sandi tidak cocok. Silakan cek kembali.", true);
+    return;
+  }
+  
+  if (!/^\d{11,12}$/.test(nohp)) { 
+    showNotification("Nomor HP harus 11-12 digit angka.", true); 
+    return; 
+  }
+
+  // Disable button during processing
+  btnDaftar.disabled = true;
+
+  try {
+    // Check upline
+    let upline = ""; 
+    let validReferral = false;
+    const s = await get(ref(db, "users")); 
+    const u = s.val() || {};
+    for (let k in u) {
+      if (u[k].referral === kodeRef) {
+        upline = k;
+        validReferral = true;
+        break;
+      }
+    }
+
+    // Check duplicate phone number
+    const userRef = ref(db, "users/" + nohp);
+    const exist = await get(userRef);
+    if (exist.exists()) { 
+      showNotification("Nomor HP sudah terdaftar.", true); 
+      btnDaftar.disabled = false;
+      return;
+    }
+
+    // SEMUA USER MENDAPATKAN BONUS 30.000 (baik pakai kode referral atau tidak)
+    const saldoAwal = 30000;
+
+    // Generate referral code untuk user baru
+    const referralCodeBaru = generateReferralCode();
+
+    // Save user data
+    await set(userRef, { 
+      nohp,
+      password,
+      saldo: saldoAwal,
+      saldo_deposit: 0,
+      saldo_cashback: 0,
+      referral: referralCodeBaru,
+      upline: validReferral ? upline : "",
+      tanggal_daftar: new Date().toISOString(),
+      status: "aktif",
+      produkPertama: false,
+      // Inisialisasi data referral
+      totalKomisi: 0,
+      totalRef1: 0,
+      aktifRef1: 0,
+      nonAktifRef1: 0,
+      totalRef2: 0,
+      aktifRef2: 0,
+      nonAktifRef2: 0,
+      totalRef3: 0,
+      aktifRef3: 0,
+      nonAktifRef3: 0,
+      refList1: [],
+      refList2: [],
+      refList3: [],
+      aktifRefList1: [],
+      aktifRefList2: [],
+      aktifRefList3: []
+    });
+
+    // Update data referral ke upline jika ada
+    if (validReferral && upline) {
+      // Update level 1
+      await updateReferralChain(upline, nohp, 1);
+    }
+
+    // Tampilkan pesan berhasil tanpa menyebut bonus
+    showNotification("Pendaftaran berhasil! Selamat datang di Orbit.");
+    
+    // Redirect ke dashboard setelah beberapa detik
+    setTimeout(() => {
+      // Simpan nohp di localStorage untuk login otomatis
+      localStorage.setItem("nohp", nohp);
+      window.location.href = "dashboard.html";
+    }, 2000);
+
+  } catch(err) {
+    console.error("Registration error:", err);
+    showNotification("Terjadi kesalahan, coba lagi!", true);
+    btnDaftar.disabled = false;
+  }
+};
+
+// Auto referral from URL
+document.addEventListener('DOMContentLoaded', function() {
+  createStars();
+  
+  const params = new URLSearchParams(window.location.search);
+  const kode = params.get("ref");
+  if (kode) document.getElementById("referral").value = kode;
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Profil | Orbit</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    :root {
+      --orbit-dark: #0a0a16;
+      --orbit-primary: #6366f1;
+      --orbit-primary-dark: #4f46e5;
+      --orbit-secondary: #8b5cf6;
+      --orbit-white: #ffffff;
+      --orbit-gray: #94a3b8;
+      --orbit-light-gray: #e2e8f0;
+      --orbit-card-bg: rgba(15, 23, 42, 0.8);
+      --orbit-green: #10b981;
+      --orbit-yellow: #f59e0b;
+      --orbit-purple: #8b5cf6;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background-color: var(--orbit-dark);
+      color: var(--orbit-white);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Orbit Background Effect */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+        linear-gradient(to bottom, rgba(10, 10, 22, 0.9) 0%, rgba(15, 23, 42, 0.8) 100%);
+      z-index: -1;
+    }
+
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    .star {
+      position: absolute;
+      background-color: white;
+      border-radius: 50%;
+      animation: twinkle 5s infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 15px 10px;
+      background-color: rgba(10, 10, 22, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .orbit-logo {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--orbit-primary), var(--orbit-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .orbit-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--orbit-primary), var(--orbit-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .orbit-avatar::before {
+      content: '';
+      position: absolute;
+      width: 60%;
+      height: 60%;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.7);
+    }
+
+    .orbit-avatar::after {
+      content: '';
+      position: absolute;
+      width: 30%;
+      height: 30%;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      top: 20%;
+      left: 20%;
+    }
+
+    /* Scroll Container */
+    .scroll-container {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 80px;
+    }
+
+    /* Profile Header */
+    .profile-header {
+      padding: 30px 20px 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .profile-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin: 0 auto 15px;
+      background: linear-gradient(135deg, var(--orbit-primary), var(--orbit-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+      border: 3px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .profile-avatar::before {
+      content: '';
+      position: absolute;
+      width: 80%;
+      height: 80%;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.7);
+    }
+
+    .profile-avatar::after {
+      content: '';
+      position: absolute;
+      width: 40%;
+      height: 40%;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      top: 20%;
+      left: 20%;
+    }
+
+    .profile-name {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 5px;
+      color: var(--orbit-white);
+    }
+
+    .profile-phone {
+      font-size: 14px;
+      color: var(--orbit-gray);
+      margin-bottom: 15px;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      padding: 0 20px 20px;
+    }
+
+    .stat-card {
+      background: var(--orbit-card-bg);
+      border-radius: 16px;
+      padding: 20px 15px;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      transition: transform .25s ease, box-shadow .25s ease;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--orbit-primary), var(--orbit-secondary));
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 5px;
+      color: var(--orbit-white);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--orbit-gray);
+    }
+
+    /* Quick Actions */
+    .quick-actions {
+      padding: 0 20px 20px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: var(--orbit-white);
+      padding-left: 5px;
+    }
+
+    .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .action-card {
+      background: var(--orbit-card-bg);
+      border-radius: 16px;
+      padding: 20px 15px;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      transition: transform .25s ease, box-shadow .25s ease;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .action-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--orbit-primary), var(--orbit-secondary));
+    }
+
+    .action-card:hover, .action-card:active {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+    }
+
+    .action-icon {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 10px;
+      border-radius: 12px;
+      background: rgba(99, 102, 241, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .action-icon img {
+      width: 22px;
+      filter: brightness(0) invert(1);
+    }
+
+    .action-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--orbit-white);
+    }
+
+    /* Menu List */
+    .menu-section {
+      padding: 0 20px 30px;
+    }
+
+    .menu-list {
+      background: var(--orbit-card-bg);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      padding: 18px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      transition: background 0.3s ease;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .menu-item:last-child {
+      border-bottom: none;
+    }
+
+    .menu-item:hover, .menu-item:active {
+      background: rgba(99, 102, 241, 0.1);
+    }
+
+    .menu-icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      background: rgba(99, 102, 241, 0.2);
+    }
+
+    .menu-icon img {
+      width: 16px;
+      filter: brightness(0) invert(1);
+    }
+
+    .menu-text {
+      flex: 1;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--orbit-white);
+    }
+
+    .menu-arrow {
+      color: var(--orbit-gray);
+      font-size: 18px;
+    }
+
+    /* Loading State untuk Logout */
+    .menu-item.loading {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .menu-item.loading .menu-text {
+      color: var(--orbit-gray);
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(10, 10, 22, 0.95);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .bottom-nav a {
+      color: var(--orbit-gray);
+      text-decoration: none;
+      font-size: 12px;
+      text-align: center;
+      flex: 1;
+      transition: color 0.2s;
+      touch-action: manipulation;
+    }
+
+    .bottom-nav a.active {
+      color: var(--orbit-primary);
+    }
+
+    .bottom-nav img {
+      width: 22px;
+      display: block;
+      margin: 0 auto 5px;
+      filter: brightness(0) invert(1);
+      transition: filter 0.2s;
+    }
+
+    .bottom-nav a.active img {
+      filter: brightness(0) sepia(1) saturate(10000%) hue-rotate(230deg);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Stars Background -->
+  <div class="stars" id="stars"></div>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="orbit-logo">ORBIT</div>
+    <div class="user-info">
+      <div class="orbit-avatar" id="userAvatar"></div>
+    </div>
+  </div>
+
+  <!-- Scrollable Content -->
+  <div class="scroll-container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <div class="profile-avatar"></div>
+      <div class="profile-name" id="namaUser">Halo, User</div>
+      <div class="profile-phone" id="nohpUser">081234567890</div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value" id="saldoUser">Rp 0</div>
+        <div class="stat-label">Saldo</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="totalInvest">Rp 0</div>
+        <div class="stat-label">Total Invest</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="totalKomisi">Rp 0</div>
+        <div class="stat-label">Total Komisi</div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <div class="section-title">Aksi Cepat</div>
+      <div class="actions-grid">
+        <div class="action-card" onclick="goPage('deposit.html')">
+          <div class="action-icon">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/money-bag.png" alt="Deposit">
+          </div>
+          <div class="action-text">Deposit</div>
+        </div>
+        <div class="action-card" onclick="goPage('tarik.html')">
+          <div class="action-icon">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/withdrawal.png" alt="Penarikan">
+          </div>
+          <div class="action-text">Penarikan</div>
+        </div>
+        <div class="action-card" onclick="goPage('bank.html')">
+          <div class="action-icon">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/bank.png" alt="Bank">
+          </div>
+          <div class="action-text">Bank</div>
+        </div>
+        <div class="action-card" onclick="goPage('team.html')">
+          <div class="action-icon">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/conference.png" alt="Tim">
+          </div>
+          <div class="action-text">Tim Saya</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menu Section -->
+    <div class="menu-section">
+      <div class="section-title">Menu Lainnya</div>
+      <div class="menu-list">
+        <div class="menu-item" onclick="goPage('about.html')">
+          <div class="menu-icon">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/info.png" alt="Tentang">
+          </div>
+          <div class="menu-text">Tentang Kami</div>
+          <div class="menu-arrow">›</div>
+        </div>
+        <div class="menu-item" onclick="goPage('riwayat.html')">
+          <div class="menu-icon">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/time-machine.png" alt="Riwayat">
+          </div>
+          <div class="menu-text">Riwayat Aktivitas</div>
+          <div class="menu-arrow">›</div>
+        </div>
+        <div class="menu-item" onclick="goPage('cs.html')">
+          <div class="menu-icon">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/customer-support.png" alt="CS">
+          </div>
+          <div class="menu-text">Layanan CS</div>
+          <div class="menu-arrow">›</div>
+        </div>
+        <div class="menu-item" id="logoutBtn">
+          <div class="menu-icon">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/exit.png" alt="Logout">
+          </div>
+          <div class="menu-text">Logout</div>
+          <div class="menu-arrow">›</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <a href="dashboard.html">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/home.png"/>
+      Beranda
+    </a>
+    <a href="invest.html">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/investment.png"/>
+      Invest
+    </a>
+    <a href="team.html">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/conference.png"/>
+      Tim
+    </a>
+    <a href="user.html" class="active">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/user.png"/>
+      Profil
+    </a>
+  </div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+  authDomain: "lginvest-776cf.firebaseapp.com",
+  databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+  projectId: "lginvest-776cf",
+  storageBucket: "lginvest-776cf.firebasestorage.app",
+  messagingSenderId: "831934282072",
+  appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d",
+  measurementId: "G-265YF9DYCF"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// Create stars background
+function createStars() {
+  const starsContainer = document.getElementById('stars');
+  const starsCount = 100;
+  
+  for (let i = 0; i < starsCount; i++) {
+    const star = document.createElement('div');
+    star.classList.add('star');
+    
+    const size = Math.random() * 2 + 1;
+    const left = Math.random() * 100;
+    const top = Math.random() * 100;
+    const delay = Math.random() * 5;
+    
+    star.style.width = `${size}px`;
+    star.style.height = `${size}px`;
+    star.style.left = `${left}%`;
+    star.style.top = `${top}%`;
+    star.style.animationDelay = `${delay}s`;
+    
+    starsContainer.appendChild(star);
+  }
+}
+
+// Format Rupiah
+function formatRupiah(n) {
+  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
+// Load user data
+async function loadUser() {
+  try {
+    const nohp = localStorage.getItem("nohp");
+    if (!nohp) {
+      console.log("User belum login");
+      return;
+    }
+    
+    console.log("Loading data for user:", nohp);
+    
+    const userRef = ref(db, "users/" + nohp);
+    const snapshot = await get(userRef);
+    
+    if (snapshot.exists()) {
+      const data = snapshot.val();
+      console.log("User data found:", data);
+      
+      // Update UI dengan data user
+      document.getElementById("namaUser").textContent = "Halo, " + (data.nama || "User");
+      document.getElementById("nohpUser").textContent = nohp;
+      document.getElementById("saldoUser").textContent = "Rp " + formatRupiah(data.saldo || 0);
+      document.getElementById("totalInvest").textContent = "Rp " + formatRupiah(data.totalInvest || 0);
+      document.getElementById("totalKomisi").textContent = "Rp " + formatRupiah(data.totalKomisi || 0);
+    } else {
+      console.log("User data not found");
+    }
+  } catch(e) {
+    console.error("Error loading user data:", e);
+  }
+}
+
+// Fungsi logout
+function logout() {
+  if (confirm("Apakah Anda yakin ingin logout?")) {
+    // Tampilkan efek loading
+    const logoutBtn = document.getElementById('logoutBtn');
+    const menuText = logoutBtn.querySelector('.menu-text');
+    const originalText = menuText.textContent;
+    
+    logoutBtn.classList.add('loading');
+    menuText.textContent = 'Logging out...';
+    
+    // Tunggu sebentar untuk efek visual, lalu logout
+    setTimeout(() => {
+      localStorage.removeItem("nohp");
+      window.location.href = "index.html";
+    }, 800);
+  }
+}
+
+// Pindah halaman
+window.goPage = function(page) {
+  window.location.href = page;
+}
+
+// Initialize saat halaman dimuat
+document.addEventListener('DOMContentLoaded', function() {
+  createStars();
+  loadUser();
+  
+  // Tambahkan event listener untuk logout
+  const logoutBtn = document.getElementById('logoutBtn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', logout);
+  }
+});
+
+</script>
+
+</body>
+</html>

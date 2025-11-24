@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bank | Netflix Invest</title>
+<style>
+:root{--bg:#0d0d0d;--card:#1c1c1c;--red:#e50914;--white:#fff;--green:#28a745;--gray:#555;--yellow:#ffc107;}
+body{margin:0;font-family:"Poppins",Arial,sans-serif;background:var(--bg);color:var(--white);padding:15px;}
+h1{color:var(--red);text-align:center;margin-bottom:20px;}
+.card{background:var(--card);padding:15px;border-radius:12px;margin-bottom:15px;box-shadow:0 6px 20px rgba(0,0,0,0.7);}
+.card label{display:block;margin:8px 0 4px 0;font-size:14px;}
+.card input,.card select{width:100%;padding:12px;border-radius:8px;border:none;background:#222;color:#fff;font-size:14px;}
+.card button{background:var(--red);color:#fff;padding:14px;width:100%;border:none;border-radius:8px;margin-top:12px;font-weight:600;cursor:pointer;transition:0.3s;}
+.card button:hover:not(:disabled){background:#b20710;}
+.card button:disabled{background:var(--gray);cursor:not-allowed;}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;padding:12px 20px;border-radius:8px;display:none;box-shadow:0 4px 16px rgba(0,0,0,0.7);z-index:999;}
+#loader{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;z-index:998;}
+#loader div{border:5px solid #fff;border-top:5px solid var(--red);border-radius:50%;width:50px;height:50px;animation:spin 1s linear infinite;}
+@keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+
+<h1>Bank Anda</h1>
+
+<div class="card">
+  <h3>Tambah Bank</h3>
+  <label for="namaBank">Pilih Bank</label>
+  <select id="namaBank">
+    <option value="">-- Pilih Bank --</option>
+    <option value="Dana">Dana</option>
+    <option value="OVO">OVO</option>
+    <option value="Gopay">Gopay</option>
+    <option value="ShopeePay">ShopeePay</option>
+    <option value="BRI">BRI</option>
+    <option value="BCA">BCA</option>
+    <option value="SeaBank">SeaBank</option>
+  </select>
+  <label for="noRek">No. Rekening</label>
+  <input type="text" id="noRek" placeholder="Contoh: 1234567890">
+  <label for="namaPemilik">Nama Pemilik</label>
+  <input type="text" id="namaPemilik" placeholder="Contoh: Budi Santoso">
+  <button id="btnSimpan">Simpan Bank</button>
+</div>
+<div class="card">
+  <h3>Bank Terdaftar</h3>
+  <div id="bankTerdaftar">Belum ada bank</div>
+</div>
+<div class="card">
+  <h3>📌 Panduan Menambahkan Bank</h3>
+  <ul style="font-size:14px;line-height:1.6;color:#ccc;">
+    <li>Pilih salah satu bank dari daftar.</li>
+    <li>Masukkan nomor rekening yang valid. Nomor rekening unik, tidak boleh dipakai user lain.</li>
+    <li>Masukkan nama pemilik rekening sesuai bank.</li>
+    <li>Setiap user hanya bisa menambahkan 1 bank. Setelah menambahkan, otomatis diarahkan ke dashboard.</li>
+    <li>Pastikan semua data benar, karena nomor rekening digunakan untuk penarikan saldo.</li>
+  </ul>
+</div>
+<div id="toast"></div>
+<div id="loader"><div></div></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+  authDomain: "lginvest-776cf.firebaseapp.com",
+  databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+  projectId: "lginvest-776cf",
+  storageBucket: "lginvest-776cf.appspot.com",
+  messagingSenderId: "831934282072",
+  appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d",
+  measurementId: "G-265YF9DYCF"
+};
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const nohp = localStorage.getItem("nohp")||"081234567890";
+const userRef = ref(db,"users/"+nohp);
+
+const btn = document.getElementById("btnSimpan");
+const toastEl = document.getElementById("toast");
+const loaderEl = document.getElementById("loader");
+const bankTerdaftar = document.getElementById("bankTerdaftar");
+
+function showToast(msg,color="var(--green)"){
+  toastEl.textContent=msg;
+  toastEl.style.background=color;
+  toastEl.style.display="block";
+  setTimeout(()=>{toastEl.style.display="none";},3000);
+}
+
+async function loadBank(){
+  const snap = await get(userRef);
+  if(snap.exists()){
+    const user = snap.val();
+    if(user.bank){
+      const key = Object.keys(user.bank)[0];
+      bankTerdaftar.textContent = `${key} - ${user.bank[key].noRek} (${user.bank[key].namaPemilik})`;
+    }
+  }
+}
+
+btn.addEventListener("click", async ()=>{
+  const namaBank = document.getElementById("namaBank").value.trim();
+  const noRek = document.getElementById("noRek").value.trim();
+  const namaPemilik = document.getElementById("namaPemilik").value.trim();
+  if(!namaBank || !noRek || !namaPemilik){showToast("Semua kolom wajib diisi","var(--yellow)"); return;}
+  loaderEl.style.display="flex";
+  
+  const snap = await get(ref(db,"users/"));
+  const users = snap.val()||{};
+  for(const key in users){
+    if(users[key].bank && Object.values(users[key].bank).some(b=>b.noRek===noRek)){
+      loaderEl.style.display="none";
+      showToast("Nomor rekening sudah digunakan user lain","var(--yellow)");
+      return;
+    }
+  }
+  
+  const userSnap = await get(userRef);
+  const user = userSnap.val();
+  if(user.bank){loaderEl.style.display="none";showToast("Anda sudah menambahkan bank","var(--yellow)"); return;}
+  
+  await update(userRef,{bank:{[namaBank]:{noRek,namaPemilik}}});
+  loaderEl.style.display="none";
+  showToast("Bank berhasil ditambahkan");
+  loadBank();
+  setTimeout(()=>{window.location.href="dashboard.html";},1500);
+});
+
+loadBank();
+</script>
+</body>
+</html>

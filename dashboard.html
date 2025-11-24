@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Dashboard | Orbit</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    :root {
+      --orbit-dark: #0a0a16;
+      --orbit-primary: #6366f1;
+      --orbit-primary-dark: #4f46e5;
+      --orbit-secondary: #8b5cf6;
+      --orbit-white: #ffffff;
+      --orbit-gray: #94a3b8;
+      --orbit-light-gray: #e2e8f0;
+      --orbit-card-bg: rgba(15, 23, 42, 0.8);
+      --orbit-green: #10b981;
+      --orbit-yellow: #f59e0b;
+      --orbit-purple: #8b5cf6;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background-color: var(--orbit-dark);
+      color: var(--orbit-white);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Orbit Background Effect */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+        linear-gradient(to bottom, rgba(10, 10, 22, 0.9) 0%, rgba(15, 23, 42, 0.8) 100%);
+      z-index: -1;
+    }
+
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    .star {
+      position: absolute;
+      background-color: white;
+      border-radius: 50%;
+      animation: twinkle 5s infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+
+    /* Scrollable Content Container */
+    .scroll-container {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 80px; /* Space for bottom nav */
+    }
+
+    /* Space Animation Container */
+    .space-animation {
+      width: 100%;
+      height: 180px;
+      position: relative;
+      overflow: hidden;
+      background: transparent;
+    }
+
+    /* Improved Planet Designs */
+    .planet {
+      position: absolute;
+      border-radius: 50%;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      animation: float 20s infinite linear;
+    }
+
+    .planet-1 {
+      width: 70px;
+      height: 70px;
+      top: 20%;
+      left: 15%;
+      animation-duration: 25s;
+      background: 
+        radial-gradient(circle at 30% 30%, #d97706, #92400e, #451a03),
+        radial-gradient(circle at 70% 20%, #f59e0b, transparent 30%);
+      box-shadow: 
+        inset -10px -10px 20px rgba(0, 0, 0, 0.5),
+        inset 5px 5px 15px rgba(245, 158, 11, 0.3);
+    }
+
+    .planet-1::before {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 8px;
+      background: rgba(120, 53, 15, 0.7);
+      border-radius: 4px;
+      top: 30%;
+      left: 40%;
+      transform: rotate(-15deg);
+    }
+
+    .planet-1::after {
+      content: '';
+      position: absolute;
+      width: 15px;
+      height: 5px;
+      background: rgba(120, 53, 15, 0.7);
+      border-radius: 2.5px;
+      bottom: 40%;
+      right: 30%;
+      transform: rotate(25deg);
+    }
+
+    .planet-2 {
+      width: 60px;
+      height: 60px;
+      top: 50%;
+      left: 75%;
+      animation-duration: 30s;
+      background: 
+        radial-gradient(circle at 30% 30%, #1e40af, #1e3a8a, #172554),
+        radial-gradient(circle at 60% 70%, #10b981, transparent 30%);
+      box-shadow: 
+        inset -10px -10px 20px rgba(0, 0, 0, 0.5),
+        inset 5px 5px 15px rgba(16, 185, 129, 0.3);
+    }
+
+    .planet-2::before {
+      content: '';
+      position: absolute;
+      width: 25px;
+      height: 10px;
+      background: rgba(30, 64, 175, 0.6);
+      border-radius: 5px;
+      top: 50%;
+      left: 20%;
+      transform: rotate(10deg);
+    }
+
+    .planet-2::after {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 7px;
+      background: rgba(30, 64, 175, 0.6);
+      border-radius: 3.5px;
+      bottom: 30%;
+      right: 25%;
+      transform: rotate(-20deg);
+    }
+
+    .rocket {
+      position: absolute;
+      width: 30px;
+      height: 40px;
+      background: linear-gradient(135deg, #f1f5f9, #cbd5e1);
+      clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+      animation: fly 15s infinite linear;
+      transform-origin: center;
+    }
+
+    .rocket::after {
+      content: '';
+      position: absolute;
+      bottom: -15px;
+      left: 30%;
+      width: 40%;
+      height: 20px;
+      background: linear-gradient(90deg, #f59e0b, #ea580c);
+      border-radius: 50%;
+      filter: blur(5px);
+      animation: flame 0.5s infinite alternate;
+    }
+
+    .satellite {
+      position: absolute;
+      width: 25px;
+      height: 10px;
+      background: #f1f5f9;
+      border-radius: 2px;
+      animation: orbit 18s infinite linear;
+    }
+
+    .satellite::before, .satellite::after {
+      content: '';
+      position: absolute;
+      background: #cbd5e1;
+    }
+
+    .satellite::before {
+      width: 15px;
+      height: 2px;
+      top: 50%;
+      left: -15px;
+      transform: translateY(-50%);
+    }
+
+    .satellite::after {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      top: 50%;
+      right: -10px;
+      transform: translateY(-50%);
+    }
+
+    /* Animations */
+    @keyframes float {
+      0% {
+        transform: translateY(0) rotate(0deg);
+      }
+      25% {
+        transform: translateY(-10px) rotate(90deg);
+      }
+      50% {
+        transform: translateY(0) rotate(180deg);
+      }
+      75% {
+        transform: translateY(10px) rotate(270deg);
+      }
+      100% {
+        transform: translateY(0) rotate(360deg);
+      }
+    }
+
+    @keyframes fly {
+      0% {
+        left: -50px;
+        top: 30%;
+        transform: rotate(45deg);
+      }
+      25% {
+        left: 25%;
+        top: 10%;
+        transform: rotate(90deg);
+      }
+      50% {
+        left: 50%;
+        top: 70%;
+        transform: rotate(135deg);
+      }
+      75% {
+        left: 75%;
+        top: 20%;
+        transform: rotate(180deg);
+      }
+      100% {
+        left: 100%;
+        top: 50%;
+        transform: rotate(225deg);
+      }
+    }
+
+    @keyframes orbit {
+      0% {
+        transform: rotate(0deg) translateX(80px) rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg) translateX(80px) rotate(-360deg);
+      }
+    }
+
+    @keyframes flame {
+      0% {
+        transform: scaleY(0.8);
+        opacity: 0.7;
+      }
+      100% {
+        transform: scaleY(1.2);
+        opacity: 1;
+      }
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 15px 10px;
+      background-color: rgba(10, 10, 22, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .orbit-logo {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--orbit-primary), var(--orbit-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 1px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .orbit-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--orbit-primary), var(--orbit-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .orbit-avatar::before {
+      content: '';
+      position: absolute;
+      width: 60%;
+      height: 60%;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.7);
+    }
+
+    .orbit-avatar::after {
+      content: '';
+      position: absolute;
+      width: 30%;
+      height: 30%;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      top: 20%;
+      left: 20%;
+    }
+
+    /* Menu 4 kolom */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      padding: 20px 15px;
+      background-color: rgba(10, 10, 22, 0.5);
+    }
+
+    .menu-item {
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+      padding: 12px 5px;
+      border-radius: 12px;
+      background-color: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      touch-action: manipulation;
+    }
+
+    .menu-item:hover, .menu-item:active {
+      transform: translateY(-3px);
+      background-color: rgba(99, 102, 241, 0.1);
+    }
+
+    .menu-item img {
+      width: 30px;
+      margin-bottom: 8px;
+      filter: brightness(0) invert(1);
+    }
+
+    .menu-item span {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--orbit-white);
+    }
+
+    /* Saldo */
+    .saldo-box {
+      background: var(--orbit-card-bg);
+      margin: 0 15px 20px;
+      border-radius: 16px;
+      padding: 25px;
+      text-align: center;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      position: relative;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      overflow: hidden;
+    }
+
+    .saldo-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--orbit-primary), var(--orbit-secondary));
+    }
+
+    .saldo-box strong {
+      font-size: 28px;
+      background: linear-gradient(90deg, var(--orbit-primary), var(--orbit-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 700;
+    }
+
+    .saldo-box small {
+      font-size: 14px;
+      color: var(--orbit-gray);
+    }
+
+    /* Section Produk */
+    .produk-section {
+      padding: 0 15px;
+      margin-bottom: 30px;
+    }
+
+    .produk-section h3 {
+      margin-bottom: 20px;
+      font-size: 18px;
+      font-weight: 600;
+      padding-left: 5px;
+    }
+
+    /* Grid 2 kolom */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .product {
+      background: var(--orbit-card-bg);
+      border-radius: 16px;
+      padding: 20px 15px;
+      position: relative;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      transition: transform .25s ease, box-shadow .25s ease;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+      touch-action: manipulation;
+    }
+
+    .product::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--orbit-primary), var(--orbit-secondary));
+    }
+
+    .product:hover, .product:active {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+    }
+
+    .premium-badge {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: linear-gradient(135deg, var(--orbit-yellow), #f59e0b);
+      color: #000;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 800;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+      z-index: 2;
+    }
+
+    .title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--orbit-white);
+    }
+
+    .price {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--orbit-white);
+      margin-bottom: 8px;
+    }
+
+    .profit-container {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      border-left: 3px solid var(--orbit-green);
+    }
+
+    .profit-percent{
+      color: var(--orbit-green);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .profit-amount{
+      color: var(--orbit-white);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .duration {
+      font-size: 14px;
+      color: var(--orbit-gray);
+      margin-bottom: 8px;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--orbit-primary), var(--orbit-secondary));
+      border: none;
+      color: var(--orbit-white);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+      transition: .2s;
+      margin-top: auto;
+      touch-action: manipulation;
+    }
+
+    .btn-primary:hover, .btn-primary:active {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(99, 102, 241, 0.5);
+    }
+
+    /* Bottom Nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(10, 10, 22, 0.95);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .bottom-nav a {
+      color: var(--orbit-gray);
+      text-decoration: none;
+      font-size: 12px;
+      text-align: center;
+      flex: 1;
+      transition: color 0.2s;
+      touch-action: manipulation;
+    }
+
+    .bottom-nav a.active {
+      color: var(--orbit-primary);
+    }
+
+    .bottom-nav img {
+      width: 22px;
+      display: block;
+      margin: 0 auto 5px;
+      filter: brightness(0) invert(1);
+      transition: filter 0.2s;
+    }
+
+    .bottom-nav a.active img {
+      filter: brightness(0) sepia(1) saturate(10000%) hue-rotate(230deg);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Stars Background -->
+  <div class="stars" id="stars"></div>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="orbit-logo">ORBIT</div>
+    <div class="user-info">
+      <div class="orbit-avatar" id="userAvatar"></div>
+    </div>
+  </div>
+
+  <!-- Scrollable Content -->
+  <div class="scroll-container">
+    <!-- Space Animation Banner -->
+    <div class="space-animation">
+      <div class="planet planet-1"></div>
+      <div class="planet planet-2"></div>
+      <div class="rocket"></div>
+      <div class="satellite"></div>
+    </div>
+
+    <!-- Menu Grid -->
+    <div class="menu-grid">
+      <div class="menu-item" onclick="goPage('deposit.html')">
+        <img src="https://img.icons8.com/ios-filled/50/ffffff/money-bag.png"/>
+        <span>Deposit</span>
+      </div>
+      <div class="menu-item" onclick="goPage('tarik.html')">
+        <img src="https://img.icons8.com/ios-filled/50/ffffff/withdrawal.png"/>
+        <span>Penarikan</span>
+      </div>
+      <div class="menu-item" onclick="goPage('about.html')">
+        <img src="https://img.icons8.com/ios-filled/50/ffffff/info.png"/>
+        <span>Tentang Kami</span>
+      </div>
+      <div class="menu-item" onclick="goPage('cs.html')">
+        <img src="https://img.icons8.com/ios-filled/50/ffffff/customer-support.png"/>
+        <span>Layanan</span>
+      </div>
+    </div>
+
+    <!-- Saldo tanpa Profit Indicator -->
+    <div class="saldo-box">
+      <strong id="saldoTotal">Rp 0</strong>
+      <small>Saldo Total</small>
+    </div>
+
+    <!-- Section Produk - Grid 2 kolom seperti di invest.html -->
+    <div class="produk-section">
+      <h3>Produk Unggulan</h3>
+      <div class="grid" id="produkGrid">
+        <!-- Produk akan di-generate oleh JavaScript -->
+      </div>
+    </div>
+    
+    <!-- Additional space to ensure all content is visible -->
+    <div style="height: 50px;"></div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <a href="dashboard.html" class="active">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/home.png"/>
+      Beranda
+    </a>
+    <a href="invest.html">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/investment.png"/>
+      Invest
+    </a>
+    <a href="team.html">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/conference.png"/>
+      Tim
+    </a>
+    <a href="user.html">
+      <img src="https://img.icons8.com/ios-filled/50/ffffff/user.png"/>
+      Pengguna
+    </a>
+  </div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAuJSxpcFZ1QI-dEsEnx2qSqlb0wsvs6Mc",
+  authDomain: "lginvest-776cf.firebaseapp.com",
+  databaseURL: "https://lginvest-776cf-default-rtdb.firebaseio.com",
+  projectId: "lginvest-776cf",
+  storageBucket: "lginvest-776cf.firebasestorage.app",
+  messagingSenderId: "831934282072",
+  appId: "1:831934282072:web:6a8b7a5bcba5d4d1264d2d",
+  measurementId: "G-265YF9DYCF"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// Create stars background
+function createStars() {
+  const starsContainer = document.getElementById('stars');
+  const starsCount = 100;
+  
+  for (let i = 0; i < starsCount; i++) {
+    const star = document.createElement('div');
+    star.classList.add('star');
+    
+    const size = Math.random() * 2 + 1;
+    const left = Math.random() * 100;
+    const top = Math.random() * 100;
+    const delay = Math.random() * 5;
+    
+    star.style.width = `${size}px`;
+    star.style.height = `${size}px`;
+    star.style.left = `${left}%`;
+    star.style.top = `${top}%`;
+    star.style.animationDelay = `${delay}s`;
+    
+    starsContainer.appendChild(star);
+  }
+}
+
+// Prevent zoom but allow vertical scroll
+document.addEventListener('touchmove', function(e) {
+  if (e.scale !== 1) { 
+    e.preventDefault(); 
+  }
+}, { passive: false });
+
+document.addEventListener('gesturestart', function(e) {
+  e.preventDefault();
+});
+
+document.addEventListener('dblclick', function(e) {
+  e.preventDefault();
+});
+
+// Prevent horizontal scroll
+window.addEventListener('scroll', function() {
+  if (window.scrollX !== 0) {
+    window.scrollTo(0, window.scrollY);
+  }
+});
+
+// SESUAIKAN: 4 produk pertama dari invest.html yang sudah diperbarui
+const produkList = [100000, 200000, 300000, 450000];
+
+// Konstanta masa aktif produk (35 hari) - SESUAI DENGAN INVEST.HTML
+const PRODUCT_DURATION_DAYS = 35;
+
+// SESUAIKAN: Fungsi untuk menghitung profit (sama seperti di invest.html yang baru)
+function getProfit(price){
+  if(price <= 100000) return Math.round(price * 0.14);        // 14%
+  if(price <= 200000) return Math.round(price * 0.142);       // 14.2%
+  if(price <= 300000) return Math.round(price * 0.144);       // 14.4%
+  if(price <= 450000) return Math.round(price * 0.146);       // 14.6%
+  if(price <= 600000) return Math.round(price * 0.148);       // 14.8%
+  if(price <= 750000) return Math.round(price * 0.15);        // 15%
+  if(price <= 950000) return Math.round(price * 0.152);       // 15.2%
+  if(price <= 1200000) return Math.round(price * 0.154);      // 15.4%
+  if(price <= 1600000) return Math.round(price * 0.156);      // 15.6%
+  if(price <= 2000000) return Math.round(price * 0.158);      // 15.8%
+  if(price <= 2500000) return Math.round(price * 0.16);       // 16%
+  if(price <= 3000000) return Math.round(price * 0.162);      // 16.2%
+  return Math.round(price * 0.18);                           // 18% untuk di atas 3jt
+}
+
+// SESUAIKAN: Fungsi untuk mendapatkan persentase profit (sama seperti di invest.html yang baru)
+function getProfitPercent(price){
+  if(price <= 100000) return "14%";
+  if(price <= 200000) return "14.2%";
+  if(price <= 300000) return "14.4%";
+  if(price <= 450000) return "14.6%";
+  if(price <= 600000) return "14.8%";
+  if(price <= 750000) return "15%";
+  if(price <= 950000) return "15.2%";
+  if(price <= 1200000) return "15.4%";
+  if(price <= 1600000) return "15.6%";
+  if(price <= 2000000) return "15.8%";
+  if(price <= 2500000) return "16%";
+  if(price <= 3000000) return "16.2%";
+  return "18%";
+}
+
+// Format Rupiah
+function formatRupiah(n) {
+  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
+// Generate produk grid - SESUAI DENGAN INVEST.HTML YANG BARU
+function generateProdukGrid() {
+  const grid = document.getElementById('produkGrid');
+  grid.innerHTML = ''; // Clear existing content
+  
+  produkList.forEach((price, index) => {
+    const profit = getProfit(price);
+    const percent = getProfitPercent(price);
+    
+    // SESUAIKAN: Tentukan badge text berdasarkan harga (sama seperti di invest.html)
+    let badgeText = "BASIC";
+    if (price >= 1200000) badgeText = "PREMIUM";
+    if (price >= 2000000) badgeText = "ELITE";
+    
+    const div = document.createElement('div');
+    div.className = 'product';
+    div.innerHTML = `
+      <div class="premium-badge">${badgeText}</div>
+      <div class="title">Paket ${index + 1}</div>
+      <div class="price">Rp ${formatRupiah(price)}</div>
+      <div class="profit-container">
+        <div class="profit-percent">${percent}</div>
+        <div class="profit-amount">Rp ${formatRupiah(profit)}/hari</div>
+      </div>
+      <div class="duration">Masa aktif: ${PRODUCT_DURATION_DAYS} hari</div>
+      <button class="btn-primary" onclick="goPage('invest.html')">Beli Sekarang</button>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+// Ambil saldo user
+async function loadData() {
+  try {
+    // Gunakan nohp dari localStorage seperti di user.html
+    const nohp = localStorage.getItem("nohp");
+    if (!nohp) {
+      console.log("User belum login");
+      document.getElementById("saldoTotal").textContent = "Rp 0";
+      return;
+    }
+    
+    console.log("Loading data for user:", nohp);
+    
+    // Ambil data user
+    const userRef = ref(db, "users/" + nohp);
+    const snapshot = await get(userRef);
+    
+    if (snapshot.exists()) {
+      const data = snapshot.val();
+      console.log("User data found:", data);
+      const saldo = data.saldo || 0;
+      document.getElementById("saldoTotal").textContent = "Rp " + formatRupiah(saldo);
+    } else {
+      console.log("User data not found");
+      document.getElementById("saldoTotal").textContent = "Rp 0";
+    }
+  } catch(e) {
+    console.error("Error loading data:", e);
+    document.getElementById("saldoTotal").textContent = "Rp 0";
+  }
+}
+
+// Pindah halaman
+window.goPage = function(page) {
+  window.location.href = page;
+}
+
+// Initialize saat halaman dimuat
+document.addEventListener('DOMContentLoaded', function() {
+  createStars();
+  generateProdukGrid();
+  loadData();
+});
+
+</script>
+
+</body>
+</html>
